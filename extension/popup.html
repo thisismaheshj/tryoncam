@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <header>
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <strong>tryoncam</strong>
+      <span class="sub" id="status">Ready</span>
+    </div>
+  </header>
+
+  <!-- Set from the dashboard (Extension → Toolbar menu announcement). -->
+  <div class="announce" id="announce" hidden><span class="announce-dot" aria-hidden="true"></span><span data-role="text"></span><a data-role="link" target="_blank" rel="noopener" hidden></a></div>
+
+  <button class="item primary" data-action="open">
+    <span class="ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+           stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 15.5 4 12 5.5 8.5 4 4 6l1.5 4H8v9h8v-9h2.5L20 6Z"/></svg>
+    </span>
+    <span class="txt"><b data-copy="menuOpenLabel">Open the trial room</b><small data-copy="menuOpenHint">Hover any product and click Try On</small></span>
+  </button>
+
+  <button class="item" data-action="tutorial" hidden>
+    <span class="ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+           stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2.5" y="4.5" width="19" height="15" rx="3.5"/><path d="M10 9.2v5.6l5-2.8-5-2.8Z"/></svg>
+    </span>
+    <span class="txt"><b data-copy="menuTutorialLabel">Just watch the tutorial</b><small data-copy="menuTutorialHint">A 60-second walkthrough</small></span>
+  </button>
+
+  <div class="account" id="account"></div>
+  <p class="note" id="note" hidden></p>
+<script src="popup.js"></script>
+</body>
+</html>

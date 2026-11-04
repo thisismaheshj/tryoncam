@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>tryoncam X headers</title>
+<!--
+  X (Twitter) profile headers, 1500x500. One design per ?v= (A, B, C);
+  rendered by build.sh at 2x.
+
+  Two areas are kept clear of anything that matters:
+   - bottom-left, x < 400 and y > 320: the profile photo sits over it
+   - the top and bottom 50px: some apps crop the header to a narrower band
+-->
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; src: url("../og/assets/BricolageGrotesque.woff2") format("woff2"); font-weight: 200 800; }
+  @font-face { font-family: "Geist"; src: url("../og/assets/Geist.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("../og/assets/GeistMono.woff2") format("woff2"); font-weight: 500; }
+  :root { --ink: #0e0f12; --cream: #f6f5f1; --accent: #3d5bf5; --soft: #aebcff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1500px; height: 500px; overflow: hidden; background: #000; }
+  #frame { position: relative; width: 1500px; height: 500px; overflow: hidden; font-family: "Geist", system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .display { font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 800; letter-spacing: -0.045em; line-height: 0.96; }
+  .brand { display: flex; align-items: center; gap: 12px; font: 700 30px/1 "Bricolage Grotesque", sans-serif; letter-spacing: -.03em; }
+  .brand img { width: 44px; height: 44px; }
+  .chip { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px; font-weight: 600; font-size: 19px; white-space: nowrap; }
+  .chip svg { width: 22px; height: 22px; }
+  .pill { position: absolute; display: inline-flex; align-items: center; padding: 9px 16px; border-radius: 999px; background: #111; color: #fff; font: 600 16px/1 system-ui, sans-serif; box-shadow: 0 6px 18px rgba(0,0,0,.35); white-space: nowrap; }
+  .card { position: absolute; border-radius: 20px; overflow: hidden; background: #fff; box-shadow: 0 26px 60px -22px rgba(14,15,18,.45); }
+  .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .live { position: absolute; left: 12px; top: 12px; padding: 6px 11px; border-radius: 999px; background: rgba(0,0,0,.62); color: #fff; font: 700 13px/1 system-ui, sans-serif; letter-spacing: .06em; display: flex; gap: 6px; align-items: center; }
+  .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #ff4d4d; }
+
+  /* A · click Try On, see it on you ---------------------------------------- */
+  .A { background: var(--cream); }
+  .A .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(14,15,18,.09) 1.3px, transparent 1.4px); background-size: 22px 22px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 90% at 0% 100%, #000 10%, transparent 70%); mask-image: radial-gradient(ellipse 60% 90% at 0% 100%, #000 10%, transparent 70%); }
+  .A .glow { position: absolute; right: -120px; top: -160px; width: 760px; height: 760px; border-radius: 50%; background: radial-gradient(circle, rgba(61,91,245,.16), transparent 62%); }
+  .top { display: flex; align-items: center; gap: 22px; }
+  .top .chip { font-size: 16px; padding: 9px 15px; }
+  .top .chip svg { width: 19px; height: 19px; }
+  .A .copy { position: absolute; left: 96px; top: 70px; display: flex; flex-direction: column; gap: 26px; }
+  .A h1 { font-size: 82px; }
+  .A h1 span { color: var(--accent); }
+  .A .chip { background: var(--ink); color: #fff; }
+  .A .gar { left: 880px; top: 128px; width: 220px; height: 262px; border: 6px solid #fff; transform: rotate(-5deg); }
+  .A .gar .pill { left: 12px; top: 12px; }
+  .A .arrow { position: absolute; left: 1118px; top: 222px; width: 64px; height: 64px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; box-shadow: 0 14px 30px rgba(61,91,245,.45); }
+  .A .arrow svg { width: 30px; height: 30px; }
+  .A .panel { position: absolute; left: 1200px; top: 52px; width: 262px; height: 396px; border-radius: 26px; background: #0d0f12; padding: 44px 9px 9px; box-shadow: 0 30px 70px rgba(0,0,0,.35); }
+  .A .panel .head { position: absolute; left: 16px; right: 16px; top: 0; height: 44px; display: flex; align-items: center; gap: 8px; color: #fff; font: 700 15px/1 system-ui, sans-serif; }
+  .A .panel .head img { width: 22px; height: 22px; }
+  .A .panel .head i { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.25); }
+  .A .panel .body { position: relative; width: 100%; height: 100%; border-radius: 17px; overflow: hidden; }
+  .A .panel .body img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* B · swap outfits, live ------------------------------------------------- */
+  #frame.B { background: radial-gradient(900px 500px at 80% 110%, #1b2447 0%, #0e0f12 60%); color: #fff; }
+  .B .copy { position: absolute; left: 96px; top: 70px; display: flex; flex-direction: column; gap: 22px; }
+  .B h1 { font-size: 90px; }
+  .B h1 span { color: var(--soft); }
+  .B p { font-size: 18px; color: #9aa3b2; }
+  .B .strip { position: absolute; left: 610px; top: 0; bottom: 0; right: 0; }
+  .B .strip .card { width: 158px; height: 330px; background: #222; border: 1px solid rgba(255,255,255,.08); }
+  .B .strip .card.on { outline: 5px solid #22c55e; outline-offset: -1px; }
+  .B .strip .card .pill { left: 50%; transform: translateX(-50%); bottom: 16px; font-size: 14px; }
+  .B .brand { color: #fff; }
+
+  /* C · the internet is your fitting room ----------------------------------- */
+  #frame.C { background: radial-gradient(1100px 700px at 20% 30%, #5b76ff 0%, #3d5bf5 42%, #2436b0 100%); color: #fff; }
+  .C .wall { position: absolute; left: 640px; top: -120px; width: 1100px; height: 800px; display: grid; grid-template-columns: repeat(6, 150px); grid-auto-rows: 188px; gap: 16px;
+    transform: perspective(1400px) rotateY(-18deg) rotateZ(-8deg); transform-origin: 0 50%; }
+  .C .wall .tile { position: relative; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 18px 40px -16px rgba(5,10,60,.6); }
+  .C .wall .tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .C .wall .tile .pill { left: 9px; top: 9px; font-size: 12px; padding: 7px 11px; }
+  .C .fade { position: absolute; inset: 0; background: linear-gradient(90deg, #3a57ee 0%, rgba(61,91,245,.92) 38%, rgba(61,91,245,.2) 62%, rgba(61,91,245,0) 80%); }
+  .C .copy { position: absolute; left: 96px; top: 70px; display: flex; flex-direction: column; gap: 26px; }
+  .C .brand { color: #fff; }
+  .C .brand img { filter: drop-shadow(0 8px 16px rgba(8,16,70,.35)); }
+  .C h1 { font-size: 78px; }
+  .C h1 span { color: #d4dbff; }
+  .C .chip { background: #fff; color: var(--ink); }
+</style>
+</head>
+<body>
+<div id="frame"></div>
+<script>
+  const CHROME = '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 14h17.32A20 20 0 0 0 6.68 14l8.66 15A10 10 0 0 1 24 14Z"/><path fill="#FBBC04" d="M41.32 14A20 20 0 0 1 24 44l8.66-15A10 10 0 0 0 24 14Z"/><path fill="#34A853" d="M24 44A20 20 0 0 1 6.68 14l8.66 15a10 10 0 0 0 17.32 0Z"/><circle cx="24" cy="24" r="10" fill="#fff"/><circle cx="24" cy="24" r="8" fill="#4285F4"/></svg>';
+  const LOGO = '../../brand/camface/camface.svg';
+  const OG = '../og/assets/';
+  const IMG = '../../site/assets/img/';
+  const brand = `<div class="brand"><img src="${LOGO}" alt="">tryoncam</div>`;
+
+  const designs = {
+    A: () => `
+      <div class="dots"></div><div class="glow"></div>
+      <div class="copy">
+        <div class="top">${brand}<span class="chip">${CHROME}Chrome extension · tryoncam.com</span></div>
+        <h1 class="display">See it on you<br><span>before you buy it.</span></h1>
+      </div>
+      <div class="card gar"><img src="${OG}g-pink.jpg" alt=""><span class="pill">Try On</span></div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></div>
+      <div class="panel"><div class="head"><img src="${LOGO}" alt="">tryoncam<i></i></div>
+        <div class="body"><img src="${OG}p-pink.jpg" alt=""><span class="live">LIVE</span></div></div>`,
+
+    B: () => {
+      const looks = ['p-pink', 'p-coral', 'p-leopard', 'p-cocaine', 'p-blue'];
+      // A gentle arc: the middle card highest, the chosen one last and lifted.
+      const tops = [120, 78, 52, 78, 96];
+      const cards = looks.map((p, i) => `
+        <div class="card${i === 4 ? ' on' : ''}" style="left:${i * 172}px;top:${tops[i]}px;transform:rotate(${(i - 2) * 2.5}deg)">
+          <img src="${OG}${p}.jpg" alt="">${i === 4 ? '<span class="pill">The one ♥</span>' : ''}
+        </div>`).join('');
+      return `
+        <div class="copy">
+          <div class="top">${brand}<p>Live try-on · any store · your camera</p></div>
+          <h1 class="display">Swap outfits.<br><span>Live.</span></h1>
+        </div>
+        <div class="strip">${cards}</div>`;
+    },
+
+    C: () => {
+      const flats = ['f-heritage', 'f-love', 'f-cocaine', 'f-coral', 'f-shorts', 'f-pinstripe', 'g-blue', 'g-pink', 'f-heritage2', 'g-leopard', 'f-pinstripe3', 'f-love'];
+      const tiles = Array.from({ length: 24 }, (_, i) => flats[(i * 5) % flats.length])
+        .map((f, i) => `<div class="tile"><img src="${IMG}${f}.jpg" alt="">${i % 3 === 0 ? '<span class="pill">Try On</span>' : ''}</div>`).join('');
+      return `
+        <div class="wall">${tiles}</div>
+        <div class="fade"></div>
+        <div class="copy">
+          <div class="top">${brand}<span class="chip">${CHROME}Add to Chrome · tryoncam.com</span></div>
+          <h1 class="display">The entire internet<br><span>is your fitting room.</span></h1>
+        </div>`;
+    },
+  };
+
+  const v = new URLSearchParams(location.search).get('v') || 'A';
+  const frame = document.getElementById('frame');
+  frame.className = v;
+  frame.innerHTML = (designs[v] || designs.A)();
+  // With ?guides, show the areas X covers or crops.
+  if (new URLSearchParams(location.search).has('guides')) {
+    frame.insertAdjacentHTML('beforeend', '<div style="position:absolute;left:40px;top:333px;width:335px;height:335px;border-radius:50%;outline:3px dashed red"></div><div style="position:absolute;inset:50px 0;outline:2px dashed orange"></div>');
+  }
+</script>
+</body>
+</html>

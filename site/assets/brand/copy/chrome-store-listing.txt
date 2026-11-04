@@ -1,0 +1,28 @@
+Name: tryoncam: Virtual Try-On for Clothes
+Summary: See clothes on you before you buy. Click Try On on a product photo and watch it on you, live, through your camera.
+
+See clothes on you before you buy them.
+
+tryoncam adds a Try On button to product photos on online clothing stores. Click it, and a trial room opens beside the page with the garment on you — live, through your camera. Move, turn, and see how it sits. Click Try On on another product to swap garments without starting over.
+
+HOW IT WORKS
+• Browse any online clothing store as you normally would
+• A Try On button appears on product photos
+• Click it and allow your camera
+• Watch the garment on you, live, and swap to other products in the same session
+
+WHAT YOU GET
+• 3 free try-ons when you sign in with Google — no card needed
+• Works across the clothing stores you already shop
+• Unlimited garment swaps within a session
+• Credits never expire; top up from your account when you need more
+
+PRIVATE BY DEFAULT
+• Your camera turns on only when you start a try-on, and off when it ends
+• Video is processed in real time and never recorded or stored by us
+• tryoncam never uses your microphone
+• Sign in with Google — no password to create
+
+Works best with tops, dresses, jackets and trousers. Jewellery, shoes and bags are not supported yet.
+
+Questions? support@tryoncam.com

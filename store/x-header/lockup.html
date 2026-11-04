@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>tryoncam lockup</title>
+<!-- The logo mark and wordmark side by side, on a transparent page. ?theme=light (dark text) or dark (white text). -->
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; src: url("../og/assets/BricolageGrotesque.woff2") format("woff2"); font-weight: 200 800; }
+  html, body { margin: 0; width: 1600px; height: 480px; background: transparent; }
+  .lockup { display: flex; align-items: center; justify-content: center; gap: 56px; height: 100%;
+    font: 700 220px/1 "Bricolage Grotesque", sans-serif; letter-spacing: -.035em; color: #0e0f12; }
+  .lockup img { width: 300px; height: 300px; }
+  .dark .lockup { color: #fff; }
+</style>
+</head>
+<body>
+<div class="lockup"><img src="../../brand/camface/camface.svg" alt="">tryoncam</div>
+<script>if (new URLSearchParams(location.search).get('theme') === 'dark') document.body.className = 'dark';</script>
+</body>
+</html>

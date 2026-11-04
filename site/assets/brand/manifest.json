@@ -1,0 +1,595 @@
+{
+  "generatedAt": "2026-09-27T09:36:41.867Z",
+  "base": "https://tryoncam.com/",
+  "zip": {
+    "url": "assets/brand/tryoncam-brand-kit.zip",
+    "bytes": 6376106,
+    "files": 48
+  },
+  "palette": [
+    {
+      "name": "Accent blue",
+      "hex": "#3d5bf5",
+      "use": "Buttons, links, the logo tile"
+    },
+    {
+      "name": "Soft blue",
+      "hex": "#8ea2ff",
+      "use": "Highlight text on dark"
+    },
+    {
+      "name": "Ink",
+      "hex": "#0e0f12",
+      "use": "Text, dark backgrounds"
+    },
+    {
+      "name": "Paper",
+      "hex": "#f6f5f1",
+      "use": "Light backgrounds"
+    },
+    {
+      "name": "Live green",
+      "hex": "#22c55e",
+      "use": "Live and success states"
+    }
+  ],
+  "fonts": [
+    {
+      "name": "Bricolage Grotesque",
+      "use": "Headlines, the wordmark (ExtraBold, tight tracking)",
+      "url": "https://fonts.google.com/specimen/Bricolage+Grotesque"
+    },
+    {
+      "name": "Geist",
+      "use": "Body text and interface",
+      "url": "https://fonts.google.com/specimen/Geist"
+    },
+    {
+      "name": "Geist Mono",
+      "use": "Small labels, in capitals",
+      "url": "https://fonts.google.com/specimen/Geist+Mono"
+    }
+  ],
+  "groups": [
+    {
+      "id": "logo",
+      "title": "Logo",
+      "note": "The Camface mark. Use the full mark at 24px and up; the small version exists only for 16px.",
+      "items": [
+        {
+          "title": "Mark · SVG",
+          "use": "Anywhere the logo appears on its own. Scales to any size.",
+          "url": "assets/brand/logo/tryoncam-mark.svg",
+          "kind": "image",
+          "format": "SVG",
+          "bytes": 735,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Mark, square corners · SVG",
+          "use": "Places that round the corners themselves (app stores, avatars).",
+          "url": "assets/brand/logo/tryoncam-mark-square.svg",
+          "kind": "image",
+          "format": "SVG",
+          "bytes": 726,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Glyph · SVG",
+          "use": "The face alone, without the blue tile.",
+          "url": "assets/brand/logo/tryoncam-glyph.svg",
+          "kind": "image",
+          "format": "SVG",
+          "bytes": 676,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Mark, simplified · SVG",
+          "use": "Only for 16px, where the full detail blurs.",
+          "url": "assets/brand/logo/tryoncam-mark-small.svg",
+          "kind": "image",
+          "format": "SVG",
+          "bytes": 476,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Lockup for light backgrounds",
+          "use": "Mark and name together, transparent background.",
+          "url": "assets/brand/logo/tryoncam-lockup-light.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 36250,
+          "width": 1600,
+          "height": 480
+        },
+        {
+          "title": "Lockup for dark backgrounds",
+          "use": "Mark and name together, white text, transparent background.",
+          "url": "assets/brand/logo/tryoncam-lockup-dark.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 31445,
+          "width": 1600,
+          "height": 480
+        },
+        {
+          "title": "Mark · 1024 PNG",
+          "use": "Profile pictures: X, Instagram, LinkedIn, YouTube.",
+          "url": "assets/brand/logo/tryoncam-mark-1024.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 28535,
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "title": "Mark · 512 PNG",
+          "use": "",
+          "url": "assets/brand/logo/tryoncam-mark-512.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 12287,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Mark · 256 PNG",
+          "use": "",
+          "url": "assets/brand/logo/tryoncam-mark-256.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 5321,
+          "width": 256,
+          "height": 256
+        },
+        {
+          "title": "Glyph · 1024 PNG",
+          "use": "",
+          "url": "assets/brand/logo/tryoncam-glyph-1024.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 20217,
+          "width": 1024,
+          "height": 1024
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "title": "Social",
+      "note": "Headers keep the bottom-left clear for the profile photo. Link previews are chosen in Content → Website → Link preview.",
+      "items": [
+        {
+          "title": "X header A · light",
+          "use": "X (Twitter) profile header, 1500×500.",
+          "url": "assets/brand/social/tryoncam-x-header-a.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 325903,
+          "width": 1500,
+          "height": 500
+        },
+        {
+          "title": "X header B · dark",
+          "use": "X (Twitter) profile header, 1500×500.",
+          "url": "assets/brand/social/tryoncam-x-header-b.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 480686,
+          "width": 1500,
+          "height": 500
+        },
+        {
+          "title": "X header C · brand blue",
+          "use": "X (Twitter) profile header, 1500×500.",
+          "url": "assets/brand/social/tryoncam-x-header-c.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 650279,
+          "width": 1500,
+          "height": 500
+        },
+        {
+          "title": "X header A · 2x",
+          "use": "Same design at 3000×1000, for LinkedIn banners or print.",
+          "url": "assets/brand/social/tryoncam-x-header-a@2x.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 257050,
+          "width": 3000,
+          "height": 1000
+        },
+        {
+          "title": "X header B · 2x",
+          "use": "",
+          "url": "assets/brand/social/tryoncam-x-header-b@2x.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 365820,
+          "width": 3000,
+          "height": 1000
+        },
+        {
+          "title": "X header C · 2x",
+          "use": "",
+          "url": "assets/brand/social/tryoncam-x-header-c@2x.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 466989,
+          "width": 3000,
+          "height": 1000
+        },
+        {
+          "title": "Link preview A",
+          "use": "Shown when a tryoncam.com link is shared, 1200×630.",
+          "url": "assets/og/og-a.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 102568,
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "title": "Link preview B",
+          "use": "Shown when a tryoncam.com link is shared, 1200×630.",
+          "url": "assets/og/og-b.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 87922,
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "title": "Link preview C",
+          "use": "Shown when a tryoncam.com link is shared, 1200×630.",
+          "url": "assets/og/og-c.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 123867,
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "title": "Link preview D",
+          "use": "Shown when a tryoncam.com link is shared, 1200×630.",
+          "url": "assets/og/og-d.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 54991,
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "title": "Link preview E",
+          "use": "Shown when a tryoncam.com link is shared, 1200×630.",
+          "url": "assets/og/og-e.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 114848,
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "title": "Link preview F",
+          "use": "Shown when a tryoncam.com link is shared, 1200×630.",
+          "url": "assets/og/og-f.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 104068,
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "title": "YouTube thumbnail A",
+          "use": "1280×720.",
+          "url": "assets/brand/social/tryoncam-youtube-thumb-a.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 148730,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "title": "YouTube thumbnail B",
+          "use": "1280×720.",
+          "url": "assets/brand/social/tryoncam-youtube-thumb-b.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 131536,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "title": "YouTube thumbnail C",
+          "use": "1280×720.",
+          "url": "assets/brand/social/tryoncam-youtube-thumb-c.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 178675,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "title": "YouTube thumbnail D",
+          "use": "1280×720.",
+          "url": "assets/brand/social/tryoncam-youtube-thumb-d.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 74727,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "title": "YouTube thumbnail E",
+          "use": "1280×720.",
+          "url": "assets/brand/social/tryoncam-youtube-thumb-e.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 173024,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "title": "YouTube thumbnail F",
+          "use": "1280×720.",
+          "url": "assets/brand/social/tryoncam-youtube-thumb-f.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 161813,
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "title": "All thumbnails, one sheet",
+          "use": "An overview for picking one.",
+          "url": "assets/brand/social/tryoncam-thumbnails-overview.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 362733,
+          "width": 1600,
+          "height": 1350
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "title": "Chrome Web Store",
+      "note": "Upload these in the developer dashboard. Screenshot 2 still uses a studio photo: replace it with a real session frame before submitting.",
+      "items": [
+        {
+          "title": "Store icon",
+          "use": "128×128, the icon in search results.",
+          "url": "assets/brand/store/tryoncam-store-icon-128.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 3455,
+          "width": 128,
+          "height": 128
+        },
+        {
+          "title": "Small promo tile",
+          "use": "440×280.",
+          "url": "assets/brand/store/tryoncam-promo-small-440x280.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 51987,
+          "width": 440,
+          "height": 280
+        },
+        {
+          "title": "Marquee promo tile",
+          "use": "1400×560, used if Google features the listing.",
+          "url": "assets/brand/store/tryoncam-promo-marquee-1400x560.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 436692,
+          "width": 1400,
+          "height": 560
+        },
+        {
+          "title": "Screenshot 1 · any store",
+          "use": "1280×800.",
+          "url": "assets/brand/store/tryoncam-screenshot-1.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 450449,
+          "width": 1280,
+          "height": 800
+        },
+        {
+          "title": "Screenshot 2 · trial room",
+          "use": "Replace the photo with a real session frame first.",
+          "url": "assets/brand/store/tryoncam-screenshot-2-replace-photo.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 384934,
+          "width": 1280,
+          "height": 800
+        },
+        {
+          "title": "Screenshot 3 · sign in free",
+          "use": "1280×800.",
+          "url": "assets/brand/store/tryoncam-screenshot-3.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 216120,
+          "width": 1280,
+          "height": 800
+        },
+        {
+          "title": "Screenshot 4 · credits",
+          "use": "1280×800. Prices are from the day it was built.",
+          "url": "assets/brand/store/tryoncam-screenshot-4.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 157144,
+          "width": 1280,
+          "height": 800
+        },
+        {
+          "title": "Screenshot 5 · private",
+          "use": "1280×800.",
+          "url": "assets/brand/store/tryoncam-screenshot-5.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 127683,
+          "width": 1280,
+          "height": 800
+        }
+      ]
+    },
+    {
+      "id": "icons",
+      "title": "App & browser icons",
+      "note": "Already wired into the site and the extension; here for anywhere else that asks.",
+      "items": [
+        {
+          "title": "Favicon · SVG",
+          "use": "Browser tab icon.",
+          "url": "favicon.svg",
+          "kind": "image",
+          "format": "SVG",
+          "bytes": 735,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Favicon · ICO",
+          "use": "Older browsers.",
+          "url": "favicon.ico",
+          "kind": "image",
+          "format": "ICO",
+          "bytes": 2602,
+          "width": 48,
+          "height": 48
+        },
+        {
+          "title": "Apple touch icon",
+          "use": "180×180, iPhone home screen.",
+          "url": "apple-touch-icon.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 3549,
+          "width": 180,
+          "height": 180
+        },
+        {
+          "title": "App icon 512",
+          "use": "PWA and app listings.",
+          "url": "icon-512.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 12287,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "App icon 512 · maskable",
+          "use": "Android, which crops to its own shape.",
+          "url": "icon-512-maskable.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 8584,
+          "width": 512,
+          "height": 512
+        },
+        {
+          "title": "Extension icon 128",
+          "use": "",
+          "url": "assets/brand/icons/extension-icon-128.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 2535,
+          "width": 128,
+          "height": 128
+        },
+        {
+          "title": "Extension icon 48",
+          "use": "",
+          "url": "assets/brand/icons/extension-icon-48.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 1218,
+          "width": 48,
+          "height": 48
+        },
+        {
+          "title": "Extension icon 16",
+          "use": "",
+          "url": "assets/brand/icons/extension-icon-16.png",
+          "kind": "image",
+          "format": "PNG",
+          "bytes": 529,
+          "width": 16,
+          "height": 16
+        }
+      ]
+    },
+    {
+      "id": "video",
+      "title": "Video",
+      "note": "Not in the zip (too large); download each on its own.",
+      "items": [
+        {
+          "title": "Demo video",
+          "use": "The one-minute walkthrough on the landing page.",
+          "url": "assets/demo.mp4",
+          "kind": "video",
+          "format": "MP4",
+          "bytes": 4170891,
+          "width": 1280,
+          "height": 720,
+          "seconds": 59
+        },
+        {
+          "title": "Launch video",
+          "use": "Short promo for social posts.",
+          "url": "assets/brand/video/tryoncam-launch.mp4",
+          "kind": "video",
+          "format": "MP4",
+          "bytes": 5036933,
+          "width": 1920,
+          "height": 1080,
+          "seconds": 24
+        },
+        {
+          "title": "Launch video poster",
+          "use": "Cover image for the launch video.",
+          "url": "assets/brand/video/tryoncam-launch-poster.jpg",
+          "kind": "image",
+          "format": "JPG",
+          "bytes": 275538,
+          "width": 1920,
+          "height": 1080
+        }
+      ]
+    },
+    {
+      "id": "copy",
+      "title": "Copy",
+      "note": "Words that go with the pictures.",
+      "items": [
+        {
+          "title": "Chrome Web Store listing",
+          "use": "Name, summary and description, as submitted.",
+          "url": "assets/brand/copy/chrome-store-listing.txt",
+          "kind": "text",
+          "format": "TXT",
+          "bytes": 1373
+        },
+        {
+          "title": "Launch post",
+          "use": "One paragraph for sharing the launch video.",
+          "url": "assets/brand/copy/share-post.txt",
+          "kind": "text",
+          "format": "TXT",
+          "bytes": 175
+        }
+      ]
+    }
+  ]
+}

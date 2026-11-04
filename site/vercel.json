@@ -1,0 +1,20 @@
+{
+  "headers": [
+    {
+      "source": "/assets/demo.mp4",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }]
+    },
+    {
+      "source": "/assets/(brand|og)/(.*)",
+      "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+    },
+    {
+      "source": "/(assets/demo.mp4|favicon.svg|favicon.ico|apple-touch-icon.png|icon-512.png|icon-512-maskable.png)",
+      "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+    },
+    {
+      "source": "/assets/brand/manifest.json",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    }
+  ]
+}

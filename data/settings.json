@@ -1,0 +1,36 @@
+{
+  "tutorial": {
+    "videoId": "",
+    "title": "How the trial room works"
+  },
+  "texts": {
+    "panelTitle": "Welcome to the Trial Room",
+    "dropHeadline": "Drag & drop anything you'd like to try",
+    "dropSubtext": "or hover any product image and click Try On",
+    "startingTitle": "Starting your session",
+    "startingNote": "Getting the garment ready…",
+    "signInTitle": "Sign in to try things on",
+    "signInSubtext": "Your sessions are tracked against your account.",
+    "menuOpenLabel": "Open the trial room",
+    "menuOpenHint": "Drag a garment in, or hover one on the page",
+    "menuTutorialLabel": "Just watch the tutorial",
+    "menuTutorialHint": "A 60-second walkthrough"
+  },
+  "discovery": {
+    "wearableCategories": [
+      "top",
+      "bottom",
+      "dress",
+      "outerwear",
+      "activewear",
+      "swimwear",
+      "lingerie"
+    ]
+  },
+  "auth": {
+    "webClientId": "",
+    "extensionClientId": "",
+    "allowedEmails": [],
+    "required": true
+  }
+}

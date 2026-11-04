@@ -1,0 +1,26 @@
+# Secrets never travel in the deployment bundle. Vercel's own project
+# environment variables are the only way anything sensitive reaches the
+# runtime — a local .env being uploaded silently armed the deployment with
+# a live API key that could spend money.
+.env
+.env.*
+!.env.example
+.vercel/
+
+# The extension is loaded unpacked from disk; it is not part of the backend.
+extension/
+site/
+docs/
+test/
+brand/
+data/
+.secrets/
+*.md
+
+# Store builds (the first-upload zip carries the private key)
+/dist/
+/store/
+
+# Demo video source and renders
+/demo-video/
+/brag-output*/

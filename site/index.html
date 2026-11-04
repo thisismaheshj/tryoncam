@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tryoncam · See it on you before you buy it</title>
+  <meta name="description" content="tryoncam is a Chrome extension that puts clothes from any online store on you, live, through your own camera. Hover a garment, click Try On, and see yourself wearing it in seconds.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="tryoncam">
+  <meta property="og:title" content="tryoncam · See it on you before you buy it">
+  <meta property="og:description" content="Live virtual try-on for any clothing store, right inside Chrome.">
+  <meta property="og:url" content="https://tryoncam.com/">
+  <!-- The picture is picked in the dashboard (Settings → Link preview); this address always serves the current pick. -->
+  <meta property="og:image" content="https://app.tryoncam.com/api/public/share-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="tryoncam: see clothes on you before you buy">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="tryoncam · See it on you before you buy it">
+  <meta name="twitter:description" content="Live virtual try-on for any clothing store, right inside Chrome.">
+  <meta name="twitter:image" content="https://app.tryoncam.com/api/public/share-image.jpg">
+  <link rel="canonical" href="https://tryoncam.com/">
+  <meta name="theme-color" content="#f6f5f1">
+  <!-- Site ownership verification for orynth.dev. -->
+  <meta name="ory-verify" content="orynth-e296e499a89d40788ad5600fb9cea5c5" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script>
+    // Hide reveal targets only when motion will actually run, so the page never loads blank.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion');
+  </script>
+</head>
+<body>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="chrome" viewBox="0 0 48 48">
+    <path fill="#EA4335" d="M24 14h17.32A20 20 0 0 0 6.68 14l8.66 15A10 10 0 0 1 24 14Z"/>
+    <path fill="#FBBC04" d="M41.32 14A20 20 0 0 1 24 44l8.66-15A10 10 0 0 0 24 14Z"/>
+    <path fill="#34A853" d="M24 44A20 20 0 0 1 6.68 14l8.66 15a10 10 0 0 0 17.32 0Z"/>
+    <circle cx="24" cy="24" r="10" fill="#fff"/>
+    <circle cx="24" cy="24" r="8" fill="#4285F4"/>
+  </symbol>
+  <symbol id="spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9L12 2Zm6.5 11 .9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9.9-2.6Z"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.2 4.2L19 7"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-shopify" viewBox="0 0 24 24"><path fill="currentColor" d="M5.3 7.4h13.4l1.3 13.1a1.6 1.6 0 0 1-1.6 1.7H5.6A1.6 1.6 0 0 1 4 20.5L5.3 7.4Z"/><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" d="M8.6 9.2V6.6a3.4 3.4 0 0 1 6.8 0v2.6"/><path fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" d="M14.1 12.4c-.5-.5-1.2-.8-2.1-.8-1.2 0-2 .6-2 1.5 0 2 4.2 1.2 4.2 3.4 0 1-.9 1.7-2.3 1.7-1 0-1.8-.4-2.3-.9"/></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.5-1-2.5-4Zm-2.4-7.1c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></symbol>
+  <symbol id="i-android" viewBox="0 0 24 24"><path fill="currentColor" d="M17.5 9.2 19.3 6a.4.4 0 1 0-.7-.4l-1.8 3.2A10.9 10.9 0 0 0 12 7.8c-1.7 0-3.3.4-4.8 1L5.4 5.6a.4.4 0 0 0-.7.4l1.8 3.2C3.9 10.7 2.2 13.3 2 16.3h20c-.2-3-1.9-5.6-4.5-7.1ZM7.3 13.8a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Zm9.4 0a.9.9 0 1 1 0-1.8.9.9 0 0 1 0 1.8Z"/></symbol>
+  <symbol id="cursor" viewBox="0 0 24 24"><path fill="#0e0f12" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" d="M4 3l6.5 17 2.3-7.2L20 10.5 4 3Z"/></symbol>
+</svg>
+
+<header class="site-header" id="header">
+  <div class="site-header__inner">
+    <a class="brand" href="#top" aria-label="tryoncam home">
+      <img class="brand__mark" src="assets/logo-mark.svg" alt="" width="30" height="30">
+      tryoncam
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#demo">Demo</a>
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-soon" id="navSoon" aria-label="Coming soon">
+      <a class="soon" href="#roadmap" data-soon><svg class="soon__ico soon__ico--shopify"><use href="#i-shopify"/></svg><span class="soon__label">Shopify</span><em>Soon</em></a>
+      <a class="soon" href="#roadmap" data-soon><svg class="soon__ico soon__ico--apple"><use href="#i-apple"/></svg><span class="soon__label">iOS app</span><em>Soon</em></a>
+    </div>
+    <a class="btn btn--primary btn--sm header-cta" data-install data-magnet href="#">
+      <svg class="chrome-ico"><use href="#chrome"/></svg> Add to Chrome
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span></button>
+  </div>
+  <nav class="mobile-nav" aria-label="Mobile">
+    <a href="#demo">Demo</a>
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <div class="mobile-soon" id="mobileSoon">
+      <a class="soon" href="#roadmap" data-soon><svg class="soon__ico soon__ico--shopify"><use href="#i-shopify"/></svg><span class="soon__label">Shopify</span><em>Soon</em></a>
+      <a class="soon" href="#roadmap" data-soon><svg class="soon__ico soon__ico--apple"><use href="#i-apple"/></svg><span class="soon__label">iOS app</span><em>Soon</em></a>
+    </div>
+    <a class="btn btn--primary" data-install href="#" style="margin-top:6px"><svg class="chrome-ico"><use href="#chrome"/></svg> <span data-c="hero.cta">Add to Chrome, it's free</span></a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="wrap hero__copy">
+      <a class="hero__badge" href="#demo" data-hero-fade data-c-box><b data-c="hero.badgeTag">New</b> <span data-c="hero.badge">Live try-on in any Chrome tab</span> <svg width="14" height="14"><use href="#arrow"/></svg></a>
+      <h1 class="h-display hero__title" data-hero-title data-c="hero.title">See it on you before you buy&nbsp;it.</h1>
+      <p class="lede hero__lede" data-c="hero.lede">tryoncam puts clothes from any online store on you, live, through your own camera. Hover a garment, click <b>Try On</b>, and watch yourself wear it in seconds, without leaving the page.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" data-install data-magnet href="#">
+          <svg class="chrome-ico"><use href="#chrome"/></svg> <span data-c="hero.cta">Add to Chrome, it's free</span>
+        </a>
+        <a class="btn btn--ghost" href="#demo" data-magnet data-c-box>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10 8.5v7l5.5-3.5L10 8.5Z" fill="currentColor"/></svg>
+          <span data-c="hero.secondaryCta">Watch the demo</span>
+        </a>
+      </div>
+      <p class="hero__note" data-c="hero.note"><b>3 free try-ons</b> when you sign in. No card needed.</p>
+    </div>
+
+    <div class="ring-stage" aria-label="Garments you can try on. Drag to spin." role="img">
+      <div class="ring-tilt" id="ringTilt">
+        <div class="ring" id="ring">
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-coral.jpg" alt=""><span class="slide__live">LIVE</span><span class="slide__tag"><i></i>Deep Sea Knit</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-heritage.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-cocaine.jpg" alt=""><span class="slide__live">LIVE</span><span class="slide__tag"><i></i>Red Tee</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-pinstripe.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-love.jpg" alt=""><span class="slide__tag"><i></i>Love Club Shirt</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-shorts.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-shorts.jpg" alt=""><span class="slide__live">LIVE</span><span class="slide__tag"><i></i>Cathedral Shorts</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-coral.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-heritage.jpg" alt=""><span class="slide__tag"><i></i>Heritage Shirt</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-cocaine.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-coral2.jpg" alt=""><span class="slide__live">LIVE</span><span class="slide__tag"><i></i>Deep Sea Knit</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-love.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/m-cocaine2.jpg" alt=""><span class="slide__tag"><i></i>Red Tee</span></div></div>
+          <div class="slide"><div class="slide__in"><img src="assets/img/f-pinstripe3.jpg" alt=""><span class="slide__tag"><i></i>Try On</span></div></div>
+        </div>
+      </div>
+    </div>
+    <span class="ring-hint" data-hero-fade><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg>Drag to spin</span>
+
+    <div class="ribbon-wrap" aria-hidden="true">
+      <div class="ribbon" id="ribbon">
+        <span>Tops</span><span>Dresses</span><span>Shirts</span><span>Outerwear</span><span>Shorts</span><span>Knitwear</span><span>Activewear</span><span>Swimwear</span><span>Any store</span><span>Any tab</span>
+        <span>Tops</span><span>Dresses</span><span>Shirts</span><span>Outerwear</span><span>Shorts</span><span>Knitwear</span><span>Activewear</span><span>Swimwear</span><span>Any store</span><span>Any tab</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATEMENT ============ -->
+  <section class="statement">
+    <div class="wrap">
+      <p id="statement" data-c="statement.text">Shopping for clothes online is guessing. You squint at a model who is nothing like you, order two sizes, and send one back. tryoncam puts the garment on you, live, on the page you are already looking at.</p>
+      <div class="statement__foot" data-reveal>
+        <svg class="chrome-ico" style="width:28px;height:28px"><use href="#chrome"/></svg>
+        <span data-c="statement.foot">A free Chrome extension for desktop. Takes ten seconds to install.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEMO VIDEO ============ -->
+  <section class="section video-section" id="demo">
+    <div class="wrap">
+      <div class="section__head section__head--center">
+        <span class="eyebrow" data-reveal data-c="demo.eyebrow">The demo</span>
+        <h2 class="h-section" data-split data-c="demo.heading">Sixty seconds, start to wearing it.</h2>
+        <p class="lede" data-reveal data-c="demo.lede">Find a garment, click Try On, see it on you, and swap until it's the one.</p>
+      </div>
+
+      <div class="video-frame" id="videoFrame" data-reveal>
+        <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">yourfavouritestore.com/products/heritage-shirt</span></div>
+        <!--
+          Demo video. Set ONE of these:
+            data-youtube="VIDEO_ID"          the part after v= in a YouTube link
+            data-mp4="assets/demo.mp4"       a file you put in site/assets/
+          If both are set, YouTube wins.
+        -->
+        <div class="video-frame__media" id="video" data-youtube="" data-mp4="assets/demo.mp4" data-poster="assets/img/m-heritage.jpg">
+          <div class="video-poster" aria-hidden="true">
+            <div class="video-poster__page">
+              <figure><img src="assets/img/f-heritage.jpg" alt="" loading="lazy"><figcaption><i></i>Try On</figcaption></figure>
+              <figure><img src="assets/img/f-love.jpg" alt="" loading="lazy"><figcaption><i></i>Try On</figcaption></figure>
+              <figure><img src="assets/img/f-pinstripe.jpg" alt="" loading="lazy"><figcaption><i></i>Try On</figcaption></figure>
+              <figure><img src="assets/img/f-shorts.jpg" alt="" loading="lazy"><figcaption><i></i>Try On</figcaption></figure>
+              <figure><img src="assets/img/f-coral.jpg" alt="" loading="lazy"><figcaption><i></i>Try On</figcaption></figure>
+              <figure><img src="assets/img/f-cocaine.jpg" alt="" loading="lazy"><figcaption><i></i>Try On</figcaption></figure>
+            </div>
+            <div class="video-poster__widget">
+              <img src="assets/img/m-heritage.jpg" alt="" loading="lazy">
+              <div class="video-poster__hud"><span></span><b>0:09</b></div>
+            </div>
+          </div>
+          <button class="play" id="playBtn" type="button" data-magnet>
+            <span class="play__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5-13-7.5Z"/></svg></span>
+            <span>Play the demo<small>0:59 · sound on</small></span>
+          </button>
+        </div>
+      </div>
+      <div class="video-caption">
+        <span data-c-box><svg><use href="#check"/></svg><span data-c="demo.captions.0">Works on the store's own product photos</span></span>
+        <span data-c-box><svg><use href="#check"/></svg><span data-c="demo.captions.1">No photo upload, no body scan</span></span>
+        <span data-c-box><svg><use href="#check"/></svg><span data-c="demo.captions.2">Swap garments mid-session for free</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS (pinned) ============ -->
+  <section class="how" id="how">
+    <div class="wrap how__grid">
+      <div>
+        <div class="how__steps">
+          <div class="dstep">
+            <span class="eyebrow" data-c="how.steps.0.eyebrow">01 · Find</span>
+            <h2 class="h-section" data-c="how.steps.0.title">Hover. Click Try&nbsp;On.</h2>
+            <p data-c="how.steps.0.text">Shop the way you already do. A small <b>Try On</b> pill appears on every garment it recognises. Logos, banners and shoes are left alone.</p>
+          </div>
+          <div class="dstep">
+            <span class="eyebrow" data-c="how.steps.1.eyebrow">02 · Open</span>
+            <h2 class="h-section" data-c="how.steps.1.title">The trial room opens on the page.</h2>
+            <p data-c="how.steps.1.text">No new tab, no upload, no photoshoot. Allow your camera once and a live session starts right beside the product.</p>
+          </div>
+          <div class="dstep">
+            <span class="eyebrow" data-c="how.steps.2.eyebrow">03 · Decide</span>
+            <h2 class="h-section" data-c="how.steps.2.title">See it on you. Swap for free.</h2>
+            <p data-c="how.steps.2.text">You are wearing it, live, moving as you move. Swap in other garments during the same session at no extra cost.</p>
+          </div>
+        </div>
+        <div class="how__progress"><i id="howBar"></i></div>
+      </div>
+
+      <div class="app" id="app">
+        <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="appUrl">store.com/collections/new-in</span></div>
+        <div class="app__body">
+          <!-- 1 · shop grid with pills -->
+          <div class="pane" id="pane1">
+            <div class="shop">
+              <div class="shop__item"><figure><img src="assets/img/f-heritage.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure><p>Heritage Shirt <span>$68</span></p></div>
+              <div class="shop__item"><figure><img src="assets/img/f-coral.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure><p>Deep Sea Knit <span>$92</span></p></div>
+              <div class="shop__item"><figure><img src="assets/img/f-shorts.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure><p>Cathedral Shorts <span>$54</span></p></div>
+              <div class="shop__item"><figure><img src="assets/img/f-love.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure><p>Love Club Shirt <span>$68</span></p></div>
+              <div class="shop__item"><figure><img src="assets/img/f-pinstripe.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure><p>Pinstripe Trouser <span>$110</span></p></div>
+              <div class="shop__item"><figure><img src="assets/img/f-cocaine.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure><p>Red Tee <span>$42</span></p></div>
+            </div>
+            <svg class="cursor" id="demoCursor"><use href="#cursor"/></svg>
+          </div>
+          <!-- 2 · trial room loading -->
+          <div class="pane" id="pane2" style="padding:0">
+            <div class="room">
+              <div class="room__page"><figure><img src="assets/img/f-heritage.jpg" alt="" loading="lazy"></figure></div>
+              <div class="widget">
+                <div class="widget__head"><i></i>Trial Room<small><span data-session-seconds>15</span>s session</small></div>
+                <div class="widget__cam">
+                  <div class="scan" id="scan"></div>
+                  <div class="widget__loading"><div class="spinner"></div>Starting your session<small>Getting the garment ready…</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 3 · live -->
+          <div class="pane" id="pane3" style="padding:0">
+            <div class="live">
+              <div class="live__view">
+                <img src="assets/img/m-heritage.jpg" alt="" id="liveImg" loading="lazy">
+                <span class="live__badge">LIVE</span>
+                <div class="live__timer">
+                  <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="19" fill="rgba(14,15,18,.6)" stroke="rgba(255,255,255,.2)" stroke-width="3"/><circle id="timerRing" cx="22" cy="22" r="19" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="0"/></svg>
+                  <b id="timerNum">15</b>
+                </div>
+              </div>
+              <div class="live__side">
+                <h4>Swap in</h4>
+                <div class="swatch on" data-src="assets/img/m-heritage.jpg"><img src="assets/img/f-heritage.jpg" alt="" loading="lazy"><div>Heritage<small>Wearing now</small></div></div>
+                <div class="swatch" data-src="assets/img/m-love.jpg"><img src="assets/img/f-love.jpg" alt="" loading="lazy"><div>Love Club<small>Tap to swap</small></div></div>
+                <div class="swatch" data-src="assets/img/m-coral.jpg"><img src="assets/img/f-coral.jpg" alt="" loading="lazy"><div>Deep Sea<small>Tap to swap</small></div></div>
+                <span class="free-tag">Swaps are free inside a session</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="section" id="features">
+    <div class="wrap">
+      <div class="section__head">
+        <span class="eyebrow" data-reveal data-c="features.eyebrow">What you get</span>
+        <h2 class="h-section" data-split data-c="features.heading">A fitting room that follows you around the internet.</h2>
+      </div>
+
+      <div class="bento">
+        <article class="tile tile--wide" data-tilt data-reveal>
+          <div class="ico-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9S14.5 18.3 12 21c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z"/></svg></div>
+          <h3 data-c="features.tiles.0.title">Works on the stores you already use</h3>
+          <p data-c="features.tiles.0.text">Product pages, collection grids, independent Shopify shops, big retailers, and inspiration feeds like Pinterest and Instagram. If there is a garment in the picture, you can try it.</p>
+          <div class="tile__art">
+            <div class="mini-browser">
+              <div class="row">
+                <figure><img src="assets/img/f-love.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure>
+                <figure><img src="assets/img/f-pinstripe3.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure>
+                <figure><img src="assets/img/f-cocaine.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure>
+                <figure><img src="assets/img/f-heritage2.jpg" alt="" loading="lazy"><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figure>
+              </div>
+              <svg class="mini-cursor"><use href="#cursor"/></svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="tile" data-tilt data-reveal>
+          <div class="ico-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10 5-3v10l-5-3"/></svg></div>
+          <h3 data-c="features.tiles.1.title">Live video, not a still</h3>
+          <p data-c="features.tiles.1.text">Turn, step back, raise your arms. The garment moves with you in real time, so you see how it hangs, not just how it looks head-on.</p>
+          <div class="tile__art">
+            <div class="speed" id="speed"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="speed-meta"><span>real-time</span><span>up to <span data-session-seconds>15</span>s per credit</span></div>
+          </div>
+        </article>
+
+        <article class="tile" data-tilt data-reveal>
+          <div class="ico-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg></div>
+          <h3 data-c="features.tiles.2.title">Swap garments for free</h3>
+          <p data-c="features.tiles.2.text">One credit opens a session. Try the shirt, then the knit, then the tee. Swapping inside the session costs nothing.</p>
+          <div class="tile__art">
+            <div class="swap-stack fan">
+              <img src="assets/img/f-heritage.jpg" alt="" loading="lazy">
+              <img src="assets/img/f-coral.jpg" alt="" loading="lazy">
+              <img src="assets/img/f-love.jpg" alt="" loading="lazy">
+              <img src="assets/img/f-cocaine.jpg" alt="" loading="lazy">
+            </div>
+          </div>
+        </article>
+
+        <article class="tile tile--dark" data-tilt data-reveal>
+          <div class="ico-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3 data-c="features.tiles.3.title">Private by default</h3>
+          <p data-c="features.tiles.3.text">Your camera switches on only when you press start, and switches off when the session ends.</p>
+          <div class="tile__art privacy-list">
+            <div><svg><use href="#check"/></svg>No photos or video saved by us</div>
+            <div><svg><use href="#check"/></svg>No microphone, ever</div>
+            <div><svg><use href="#check"/></svg>Sign in with Google, no password</div>
+          </div>
+        </article>
+
+        <article class="tile" data-tilt data-reveal>
+          <div class="ico-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3.5 18.5 10l-5.8 1.7L10.5 18 5 3.5Z"/></svg></div>
+          <h3 data-c="features.tiles.4.title">Hover, then click Try On</h3>
+          <p data-c="features.tiles.4.text">A Try On button appears on product photos as you browse. Click it and the trial room opens with that garment on you.</p>
+          <div class="tile__art">
+            <div class="hoverdemo" aria-hidden="true">
+              <img src="assets/img/f-pinstripe.jpg" alt="" loading="lazy">
+              <span class="hoverdemo__pill">Try On</span>
+              <svg class="hoverdemo__cursor" viewBox="0 0 24 24"><path d="M5 3.5 18.5 10l-5.8 1.7L10.5 18 5 3.5Z"/></svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="tile tile--full" data-tilt data-reveal>
+          <div class="ico-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+          <h3 data-c="features.tiles.5.title">Knows a garment from a banner</h3>
+          <p data-c="features.tiles.5.text">tryoncam reads the page the way you do. Pills go on clothes you can wear, and stay off logos, storefront photos, payment badges and campaign banners, so the page never feels cluttered.</p>
+          <div class="tile__art verdicts">
+            <div class="verdict">Heritage Shirt · product card <b class="yes">TRY ON</b></div>
+            <div class="verdict">Cathedral Shorts · product page <b class="yes">TRY ON</b></div>
+            <div class="verdict">Store logo · header <b class="no">SKIPPED</b></div>
+            <div class="verdict">Payment badges · footer <b class="no">SKIPPED</b></div>
+            <div class="verdict">Pinterest pin · search "oversized tee" <b class="yes">TRY ON</b></div>
+            <div class="verdict">Storefront photo · about page <b class="no">SKIPPED</b></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PARALLAX GALLERY ============ -->
+  <section class="gallery" id="gallery">
+    <div class="wrap">
+      <div class="section__head section__head--center" style="margin-bottom:0">
+        <span class="eyebrow" data-reveal data-c="gallery.eyebrow">Try anything</span>
+        <h2 class="h-section" data-split data-c="gallery.heading">Tees, knits, shirts, shorts. If it goes on your body, it goes on you.</h2>
+        <p class="lede" data-reveal data-c="gallery.lede">Tops, dresses, outerwear, bottoms, activewear and swimwear all work. Shoes, bags and jewellery are left out for now, because a live model cannot place them convincingly yet.</p>
+      </div>
+      <div class="gallery__grid">
+        <div class="gallery__col">
+          <figure class="gcard"><img src="assets/img/m-coral.jpg" alt="Deep Sea knit on a model" loading="lazy"><figcaption><span>Knitwear</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard gcard--tall"><img src="assets/img/f-heritage.jpg" alt="Pink striped Heritage shirt" loading="lazy"><figcaption><span>Shirts</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard"><img src="assets/img/d-shorts.jpg" alt="Cathedral print shorts close-up" loading="lazy"><figcaption><span>Prints</span></figcaption></figure>
+        </div>
+        <div class="gallery__col">
+          <figure class="gcard gcard--tall"><img src="assets/img/m-cocaine.jpg" alt="Red tee on a model" loading="lazy"><figcaption><span>Tees</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard"><img src="assets/img/f-pinstripe.jpg" alt="Navy pinstripe trousers" loading="lazy"><figcaption><span>Trousers</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard"><img src="assets/img/m-love.jpg" alt="True Love Club shirt on a model" loading="lazy"><figcaption><span>Streetwear</span></figcaption></figure>
+        </div>
+        <div class="gallery__col">
+          <figure class="gcard"><img src="assets/img/f-shorts.jpg" alt="Cathedral print shorts" loading="lazy"><figcaption><span>Shorts</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard gcard--tall"><img src="assets/img/m-coral2.jpg" alt="Deep Sea knit, front view" loading="lazy"><figcaption><span>Layers</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard"><img src="assets/img/f-cocaine.jpg" alt="Red tee close-up" loading="lazy"><figcaption><span>Basics</span></figcaption></figure>
+        </div>
+        <div class="gallery__col">
+          <figure class="gcard gcard--tall"><img src="assets/img/m-heritage.jpg" alt="Heritage shirt worn on the street" loading="lazy"><figcaption><span>Oversized</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+          <figure class="gcard"><img src="assets/img/d-coral.jpg" alt="Deep Sea knit detail" loading="lazy"><figcaption><span>Texture</span></figcaption></figure>
+          <figure class="gcard"><img src="assets/img/m-shorts.jpg" alt="Cathedral shorts worn" loading="lazy"><figcaption><span>Bottoms</span><span class="pill"><svg><use href="#spark"/></svg>Try On</span></figcaption></figure>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat" data-reveal><b><span data-to="15">0</span>s</b><span>of live, real-time video per credit</span></div>
+        <div class="stat" data-reveal><b>∞</b><span>garment swaps inside a single session</span></div>
+        <div class="stat" data-reveal><b><span data-to="0">0</span></b><span>camera frames stored on our servers</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FLOW (horizontal) ============ -->
+  <section class="flow" id="flow">
+    <div class="wrap flow__head">
+      <span class="eyebrow" data-c="flow.eyebrow">Getting started</span>
+      <h2 class="h-section" data-c="flow.heading">From install to wearing it in under a minute.</h2>
+    </div>
+    <div class="flow__track" id="flowTrack">
+      <article class="flow__card">
+        <span class="num">01</span>
+        <h3 data-c="flow.steps.0.title">Add to Chrome</h3>
+        <p data-c="flow.steps.0.text">One click from the Chrome Web Store. It sits quietly in your toolbar until you need it.</p>
+        <div class="flow__art"><i class="fa-install"><svg class="chrome-ico"><use href="#chrome"/></svg>tryoncam<em>Add to Chrome</em></i></div>
+      </article>
+      <article class="flow__card">
+        <span class="num">02</span>
+        <h3 data-c="flow.steps.1.title">Sign in with Google</h3>
+        <p data-c="flow.steps.1.text">No password to make up. Your 3 free credits land in your account straight away.</p>
+        <div class="flow__art"><i class="fa-google"><svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google</i></div>
+      </article>
+      <article class="flow__card">
+        <span class="num">03</span>
+        <h3 data-c="flow.steps.2.title">Hover any garment</h3>
+        <p data-c="flow.steps.2.text">Go to any clothing store. Hover a product, click the Try On pill, and allow your camera once.</p>
+        <div class="flow__art">
+          <i style="position:static;display:block;width:120px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)"><img src="assets/img/f-love.jpg" alt="" loading="lazy" style="aspect-ratio:1;object-fit:cover"></i>
+          <i class="pill" style="left:50%;top:50%;translate:-50% -50%"><svg><use href="#spark"/></svg>Try On</i>
+        </div>
+      </article>
+      <article class="flow__card flow__card--accent">
+        <span class="num">04</span>
+        <h3 data-c="flow.steps.3.title">Decide before you buy</h3>
+        <p data-c="flow.steps.3.text">Keep what suits you, skip what doesn't, and send back fewer parcels.</p>
+        <div class="flow__art">
+          <i style="position:static;display:flex;gap:10px">
+            <img src="assets/img/m-coral.jpg" alt="" loading="lazy" style="width:88px;height:120px;object-fit:cover;border-radius:12px;border:3px solid #fff">
+            <img src="assets/img/m-cocaine.jpg" alt="" loading="lazy" style="width:88px;height:120px;object-fit:cover;border-radius:12px;border:3px solid #fff;opacity:.55">
+          </i>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="section" id="pricing">
+    <div class="wrap">
+      <div class="section__head section__head--center">
+        <span class="eyebrow" data-reveal data-pricing="eyebrow">Pricing</span>
+        <!-- No data-split here: this heading is replaced from the dashboard after load, and a split heading
+             re-splits its original words on resize. -->
+        <h2 class="h-section" data-reveal data-pricing="heading">Pay for try-ons, not a subscription.</h2>
+        <p class="lede" data-reveal data-pricing="lede">Buy a pack of credits once and use them whenever you shop. No monthly fee, and credits never expire.</p>
+        <div class="pricing-note" data-reveal data-pricing="note"><b>1 credit</b> = 1 live session, up to <span data-session-seconds>15</span> seconds, with unlimited garment swaps</div>
+      </div>
+
+      <div class="plans" id="plans">
+        <article class="plan" data-reveal>
+          <h3>Free</h3>
+          <div class="plan__price"><b data-price="0">$0</b></div>
+          <div class="plan__credits"><i>3</i>3 credits on sign-in</div>
+          <div class="plan__per">no card needed</div>
+          <ul>
+            <li><svg><use href="#check"/></svg>Every feature, no watermark</li>
+            <li><svg><use href="#check"/></svg>Works on any clothing store</li>
+            <li><svg><use href="#check"/></svg>Unlimited swaps per session</li>
+          </ul>
+          <a class="btn btn--ghost" data-install href="#"><svg class="chrome-ico"><use href="#chrome"/></svg>Add to Chrome</a>
+        </article>
+
+        <article class="plan" data-reveal>
+          <h3>Starter</h3>
+          <div class="plan__price"><b data-price="19">$19.00</b><span>once</span></div>
+          <div class="plan__credits"><i>10</i>10 credits</div>
+          <ul>
+            <li><svg><use href="#check"/></svg>Enough for a weekend of browsing</li>
+            <li><svg><use href="#check"/></svg>Credits never expire</li>
+            <li><svg><use href="#check"/></svg>Unlimited swaps per session</li>
+          </ul>
+          <a class="btn btn--dark" data-install href="#">Get 10 credits</a>
+        </article>
+
+        <article class="plan plan--hot" data-reveal>
+          <span class="plan__tag">Most popular</span>
+          <h3>Plus</h3>
+          <div class="plan__price"><b data-price="49.99">$49.99</b><span>once</span></div>
+          <div class="plan__credits"><i>30</i>30 credits</div>
+          <ul>
+            <li><svg><use href="#check"/></svg>A full season of shopping</li>
+            <li><svg><use href="#check"/></svg>Credits never expire</li>
+            <li><svg><use href="#check"/></svg>Unlimited swaps per session</li>
+            <li><svg><use href="#check"/></svg>Priority session start</li>
+          </ul>
+          <a class="btn btn--primary" data-install data-magnet href="#">Get 30 credits</a>
+        </article>
+
+        <article class="plan" data-reveal>
+          <h3>Pro</h3>
+          <div class="plan__price"><b data-price="119.99">$119.99</b><span>once</span></div>
+          <div class="plan__credits"><i>99</i>99 credits</div>
+          <ul>
+            <li><svg><use href="#check"/></svg>For stylists and serious shoppers</li>
+            <li><svg><use href="#check"/></svg>Credits never expire</li>
+            <li><svg><use href="#check"/></svg>Unlimited swaps per session</li>
+            <li><svg><use href="#check"/></svg>Priority session start</li>
+          </ul>
+          <a class="btn btn--dark" data-install href="#">Get 99 credits</a>
+        </article>
+      </div>
+
+      <div class="pricing-foot">
+        <div data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><b>Credits never expire</b>Use them this week or next year.</span></div>
+        <div data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18"/></svg><span><b>Buy inside the extension</b>Top up any time after you sign in.</span></div>
+        <div data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg><span><b>All sales are final</b>Try the 3 free credits first. <a href="refunds.html">Refund policy</a></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROADMAP ============ -->
+  <!-- The items are edited in the dashboard (Website → Roadmap); these are the fallback. -->
+  <section class="section roadmap" id="roadmap">
+    <div class="wrap">
+      <div class="section__head section__head--center">
+        <span class="eyebrow" data-reveal data-c="roadmap.eyebrow">Roadmap</span>
+        <h2 class="h-section" data-split data-c="roadmap.heading">Chrome today. Your store and your phone next.</h2>
+        <p class="lede" data-reveal data-c="roadmap.lede">tryoncam starts in your browser. Here is where it is going.</p>
+      </div>
+      <div class="roadmap__track">
+        <div class="roadmap__line" aria-hidden="true"><i id="roadmapFill"></i></div>
+        <ol class="roadmap__list" id="roadmapList">
+          <li class="rcard rcard--live" data-reveal>
+            <span class="rcard__dot" aria-hidden="true"></span>
+            <div class="rcard__ico"><svg class="chrome-ico"><use href="#chrome"/></svg></div>
+            <span class="rcard__status">Live now</span>
+            <h3>Chrome extension</h3>
+            <p>Try on clothes from any online store, live, right in your browser.</p>
+          </li>
+          <li class="rcard rcard--soon" data-reveal>
+            <span class="rcard__dot" aria-hidden="true"></span>
+            <div class="rcard__ico rcard__ico--shopify"><svg><use href="#i-shopify"/></svg></div>
+            <span class="rcard__status">Coming soon</span>
+            <h3>Shopify app</h3>
+            <p>A Try On button on your own product pages, so your customers see it on themselves before they buy. No code to install.</p>
+          </li>
+          <li class="rcard rcard--soon" data-reveal>
+            <span class="rcard__dot" aria-hidden="true"></span>
+            <div class="rcard__ico rcard__ico--apple"><svg><use href="#i-apple"/></svg></div>
+            <span class="rcard__status">Coming soon</span>
+            <h3>iPhone app</h3>
+            <p>The same live trial room on your phone. Try on what you find while you scroll.</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="section" id="faq" style="padding-top:0">
+    <div class="wrap faq">
+      <div>
+        <span class="eyebrow" data-reveal data-c="faq.eyebrow">FAQ</span>
+        <h2 class="h-section" data-split data-c="faq.heading">Fair questions.</h2>
+        <p class="lede" data-reveal data-c="faq.lede">Anything else, email <a href="mailto:support@tryoncam.com" style="color:var(--accent)">support@tryoncam.com</a>.</p>
+      </div>
+      <div class="faq__list" id="faqList">
+        <details data-reveal open>
+          <summary>What do I need to use it?<i></i></summary>
+          <div class="answer"><p>Google Chrome on a laptop or desktop computer with a webcam. Other Chromium browsers such as Edge and Brave can install Chrome Web Store extensions, but we only test on Chrome. Phones and tablets are not supported yet.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>What exactly is a credit?<i></i></summary>
+          <div class="answer"><p>One credit starts one live try-on session of up to <span data-session-seconds>15</span> seconds. Inside that session you can swap between as many garments as you like at no extra cost. A credit is used when the live video actually starts, not when you open the trial room.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Do you record or store my camera?<i></i></summary>
+          <div class="answer"><p>No. Your camera switches on only when you start a session. The video is streamed to our AI processing partner to render the try-on in real time, and is not saved by us. We never use the microphone. Full details are in the <a href="privacy.html">privacy policy</a>.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Will it tell me my size?<i></i></summary>
+          <div class="answer"><p>No, and we would rather be upfront about that. tryoncam shows you how a garment looks on you: colour, cut, print, proportion, the overall vibe. It is a visual preview, not a sizing tool, so always check the store's size guide before you order.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Which stores and clothes work?<i></i></summary>
+          <div class="answer"><p>Most clothing stores, including independent Shopify shops, plus inspiration feeds like Pinterest. Tops, shirts, dresses, outerwear, bottoms, activewear and swimwear are supported. Shoes, bags, eyewear and jewellery are not, yet.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Do credits expire?<i></i></summary>
+          <div class="answer"><p>No. Credits stay in your account until you use them.</p></div>
+        </details>
+        <details data-reveal>
+          <summary>Can I get a refund?<i></i></summary>
+          <div class="answer"><p>All credit purchases are final and non-refundable, which is why every account starts with 3 free credits so you can try it properly before paying. If you were charged twice or charged in error, email us and we will put it right. See the <a href="refunds.html">refund policy</a>.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="join" id="join">
+    <div class="wrap">
+      <div class="join__panel" id="joinPanel">
+        <div class="join__ring" aria-hidden="true">
+          <i style="background-image:url(assets/img/f-heritage.jpg)"></i><i style="background-image:url(assets/img/m-coral.jpg)"></i><i style="background-image:url(assets/img/f-love.jpg)"></i><i style="background-image:url(assets/img/m-cocaine.jpg)"></i><i style="background-image:url(assets/img/f-shorts.jpg)"></i><i style="background-image:url(assets/img/m-heritage.jpg)"></i><i style="background-image:url(assets/img/f-pinstripe.jpg)"></i><i style="background-image:url(assets/img/m-love.jpg)"></i><i style="background-image:url(assets/img/f-coral.jpg)"></i><i style="background-image:url(assets/img/m-shorts.jpg)"></i>
+        </div>
+        <h2 class="h-display" data-split data-c="join.heading">Stop guessing. Start trying.</h2>
+        <p data-c="join.text">Install tryoncam, sign in, and your first three try-ons are on us.</p>
+        <div class="join__actions">
+          <a class="btn btn--light" data-install data-magnet href="#"><svg class="chrome-ico"><use href="#chrome"/></svg><span data-c="join.cta">Add to Chrome, it's free</span></a>
+          <small data-c="join.small">Chrome on desktop · takes ten seconds</small>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__about">
+        <a class="brand" href="#top"><img class="brand__mark" src="assets/logo-mark.svg" alt="" width="30" height="30">tryoncam</a>
+        <p data-c="footer.about">Live virtual try-on for any clothing store, right inside Chrome. Made by tryoncam, a company of One Man Holdings LLC.</p>
+        <a class="btn btn--dark btn--sm" data-install href="#"><svg class="chrome-ico"><use href="#chrome"/></svg>Add to Chrome</a>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="refunds.html">Refund Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="mailto:support@tryoncam.com">support@tryoncam.com</a></li>
+          <li><a data-install href="#">Chrome Web Store</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__word" aria-hidden="true">tryoncam</div>
+    <div class="footer__base">
+      <span>© <span data-year>2026</span> tryoncam, a company of One Man Holdings LLC. All rights reserved.</span>
+      <span>Chrome is a trademark of Google LLC. Shopify is a trademark of Shopify Inc. Apple, iPhone and iOS are trademarks of Apple Inc.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <div class="sticky-cta__text"><b data-c="sticky.title">tryoncam for Chrome</b><small data-c="sticky.text">3 free try-ons. No card needed.</small></div>
+  <a class="btn btn--primary btn--sm" data-install href="#" tabindex="-1"><svg class="chrome-ico"><use href="#chrome"/></svg>Add to Chrome</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="assets/content.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/pricing.js"></script>
+</body>
+</html>

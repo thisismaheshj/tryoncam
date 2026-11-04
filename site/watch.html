@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>tryoncam demo</title>
+<!--
+  Hosts the YouTube player for the extension's tutorial window. YouTube will
+  not play inside a chrome-extension:// page, so the extension frames this
+  page and YouTube sees tryoncam.com as the embedding site.
+-->
+<style>
+  html, body { margin: 0; height: 100%; background: #000; }
+  iframe { width: 100%; height: 100%; border: 0; display: block; }
+  p { color: #cbd2da; font: 14px/1.6 system-ui, sans-serif; text-align: center; padding: 40px 20px; margin: 0; }
+</style>
+</head>
+<body>
+<script>
+  const id = new URLSearchParams(location.search).get('v') || '';
+  if (/^[\w-]{6,20}$/.test(id)) {
+    const frame = document.createElement('iframe');
+    frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?rel=0&modestbranding=1&autoplay=1&playsinline=1';
+    frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture; fullscreen';
+    frame.allowFullscreen = true;
+    frame.title = 'tryoncam demo';
+    document.body.appendChild(frame);
+  } else {
+    document.body.innerHTML = '<p>No video to show.</p>';
+  }
+</script>
+</body>
+</html>

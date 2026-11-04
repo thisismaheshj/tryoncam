@@ -1,0 +1,12 @@
+node_modules/
+.env
+data/*.jsonl
+*.log
+.secrets/
+.vercel
+.env*
+.env.vercel
+.env.local
+
+# Store builds (the first-upload zip carries the private key)
+dist/

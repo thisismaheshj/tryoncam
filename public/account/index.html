@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your tryoncam account</title>
+<meta name="description" content="Your tryoncam credits, billing and try-on history.">
+<link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./account.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="https://tryoncam.com"><img src="./logo-mark.svg" alt="" width="30" height="30"><span>tryoncam</span></a>
+  <div class="me" id="me" hidden>
+    <a class="topup" href="#buy" id="topUp"><svg class="coin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/><path d="M12 8.5v7M13.8 10c0-.7-.8-1.2-1.8-1.2s-1.8.5-1.8 1.2c0 1.6 3.6.9 3.6 2.6 0 .7-.8 1.3-1.8 1.3s-1.8-.6-1.8-1.3"/></svg><span>Top up credits</span><b id="topUpCount"></b></a>
+    <a class="avatar-link" href="#profile" title="Your profile" aria-label="Your profile">
+      <img id="meAvatar" alt="" referrerpolicy="no-referrer" width="34" height="34">
+    </a>
+    <button class="btn ghost small" id="signOut" type="button">Sign out</button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="side" id="side" hidden aria-label="Account sections">
+    <a href="#overview" data-section="overview"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Overview</a>
+    <a href="#buy" data-section="buy"><svg viewBox="0 0 24 24"><path d="M12 3v18M17 7.5c0-1.9-2.2-3-5-3s-5 1.2-5 3.2c0 4.6 10 2.4 10 7 0 2-2.2 3.3-5 3.3s-5-1.1-5-3"/></svg>Buy credits</a>
+    <a href="#billing" data-section="billing"><svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18"/></svg>Billing</a>
+    <a href="#profile" data-section="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Profile</a>
+    <a href="#settings" data-section="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4 5.3 5.3"/></svg>Settings</a>
+    <a href="#support" data-section="support"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg>Support</a>
+  </nav>
+
+  <main class="content">
+    <p class="notice" id="notice" hidden></p>
+
+    <section class="signin" id="signin" hidden>
+      <img src="./logo-mark.svg" alt="" width="52" height="52">
+      <h1>Sign in to your account</h1>
+      <p>Use the same Google account you signed in to the extension with.</p>
+      <div id="googleButton"></div>
+      <p class="error" id="signinError" hidden></p>
+    </section>
+
+    <!-- Overview -->
+    <section class="view" data-view="overview" hidden>
+      <h1>Overview</h1>
+      <div class="balance">
+        <div class="balance-icon"><svg class="coin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/><path d="M12 8.5v7M13.8 10c0-.7-.8-1.2-1.8-1.2s-1.8.5-1.8 1.2c0 1.6 3.6.9 3.6 2.6 0 .7-.8 1.3-1.8 1.3s-1.8-.6-1.8-1.3"/></svg></div>
+        <div class="balance-text">
+          <span>Available credits</span>
+          <b><span id="ovCredits" data-count>—</span></b>
+          <small id="ovCreditsNote">One credit is one live try-on session.</small>
+        </div>
+        <a class="topup big" href="#buy" id="ovTopUp"><svg class="coin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/><path d="M12 8.5v7M13.8 10c0-.7-.8-1.2-1.8-1.2s-1.8.5-1.8 1.2c0 1.6 3.6.9 3.6 2.6 0 .7-.8 1.3-1.8 1.3s-1.8-.6-1.8-1.3"/></svg><span>Top up credits</span></a>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>Try-ons so far</span><b id="ovSessions" data-count>0</b></div>
+        <div class="stat"><span>Minutes live</span><b id="ovMinutes" data-count>0</b></div>
+        <div class="stat"><span>Member since</span><b id="ovSince" class="small">—</b></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Recent try-ons</h2></div>
+        <ul class="list" id="recent"></ul>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="view" data-view="profile" hidden>
+      <h1>Profile</h1>
+      <div class="panel profile">
+        <img id="avatar" alt="" referrerpolicy="no-referrer">
+        <div>
+          <h2 id="name"></h2>
+          <p id="email"></p>
+          <p class="muted" id="since"></p>
+        </div>
+      </div>
+      <div class="panel">
+        <dl class="facts">
+          <dt>Signed in with</dt><dd>Google</dd>
+          <dt>Email</dt><dd id="email2"></dd>
+          <dt>Member since</dt><dd id="since2"></dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Buy credits -->
+    <section class="view" data-view="buy" hidden>
+      <h1>Buy credits</h1>
+      <p class="lead"><span id="buyBalance"></span></p>
+      <div class="pricing" data-pricing-table></div>
+    </section>
+
+    <!-- Billing -->
+    <section class="view" data-view="billing" hidden>
+      <h1>Billing</h1>
+      <div class="panel" id="subscriptionPanel" hidden>
+        <h2>Subscription</h2>
+        <div id="subscriptions"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Purchases</h2><button class="btn ghost small" id="portal" type="button" hidden>Receipts &amp; payment methods</button></div>
+        <ul class="list" id="purchases"></ul>
+      </div>
+      <h2 class="section-title">Plans &amp; pricing</h2>
+      <div class="pricing" data-pricing-table></div>
+    </section>
+
+    <!-- Settings -->
+    <section class="view" data-view="settings" hidden>
+      <h1>Settings</h1>
+      <div class="panel">
+        <h2>Account</h2>
+        <dl class="facts"><dt>Google account</dt><dd id="email3"></dd></dl>
+        <div class="row-actions">
+          <button class="btn ghost" id="signOut2" type="button">Sign out of this browser</button>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Extension</h2>
+        <p class="muted">Reinstall the extension, or watch how it works.</p>
+        <div class="row-actions">
+          <a class="btn ghost" href="https://chromewebstore.google.com/detail/aadnmnhilcphhjnchilngaeandeldngc" target="_blank" rel="noopener">Open in the Chrome Web Store</a>
+          <a class="btn ghost" id="tutorialLink" href="https://tryoncam.com/#demo" target="_blank" rel="noopener">Watch the 1-minute demo</a>
+        </div>
+      </div>
+      <div class="panel danger">
+        <h2>Delete account</h2>
+        <p class="muted">Deleting your account removes your profile and history. Unused credits are forfeited and not refunded.</p>
+        <div class="row-actions"><a class="btn ghost" id="deleteLink" href="mailto:support@tryoncam.com?subject=Delete%20my%20tryoncam%20account">Request deletion</a></div>
+      </div>
+    </section>
+
+    <!-- Support -->
+    <section class="view" data-view="support" hidden>
+      <h1>Support</h1>
+      <div class="panel contact">
+        <div class="contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></div>
+        <div>
+          <h2>Talk to a person</h2>
+          <p class="muted">Questions about a purchase or a try-on? We read every message and usually reply within a day.</p>
+        </div>
+        <a class="btn primary" id="supportLink" href="mailto:support@tryoncam.com">support@tryoncam.com</a>
+      </div>
+      <h2 class="section-title">Frequently asked</h2>
+      <div class="faq">
+        <label class="faq-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input type="search" id="faqSearch" placeholder="Search the questions" autocomplete="off"></label>
+        <div class="faq-group">
+          <h3>Credits &amp; sessions</h3>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>What is a credit?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>One credit starts one live try-on session. Inside a session you can swap between as many garments as you like, for as long as the session runs.</p></div></details>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>Do credits expire?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>No. Credits you buy stay in your account for as long as it is open.</p></div></details>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>A session failed to start. Did I lose a credit?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>No. A credit is used only once the live video starts. A session that never starts gives its credit back automatically.</p></div></details>
+        </div>
+        <div class="faq-group">
+          <h3>Payments</h3>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>I paid but my credits are not showing</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>They usually arrive within a few seconds. Refresh this page; if they are still missing after a few minutes, email us with the date of the payment and we will sort it out.</p></div></details>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>Where are my receipts?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>Open <b>Billing</b> and choose <b>Receipts &amp; payment methods</b>. Stripe, our payment processor, keeps every receipt there.</p></div></details>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>Can I get a refund?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>Purchases are final, as set out in our <a href="https://tryoncam.com/refunds.html">refund policy</a>. The free credits you get on sign-in are there to try it first.</p></div></details>
+        </div>
+        <div class="faq-group">
+          <h3>Using tryoncam</h3>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>Which shops does it work on?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>Most online clothing stores. Hover a product photo and a Try On button appears. Tops, dresses, outerwear and bottoms work best. Hats work too; jewellery, shoes and bags are not supported yet.</p></div></details>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>Is my camera video saved?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>No. Your camera is on only while a session runs, and the video is processed in real time, never recorded or stored by us. Our <a href="https://tryoncam.com/privacy.html">privacy policy</a> has the details.</p></div></details>
+          <details class="qa"><summary><span class="q-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9M12 17h.01"/></svg></span><span>How do I delete my account?</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="qa-body"><p>Go to <b>Settings</b> and choose <b>Request deletion</b>, or email us. Unused credits are forfeited when an account is deleted.</p></div></details>
+        </div>
+        <p class="faq-empty" id="faqEmpty" hidden>No question matches that. Write to us instead — we are happy to help.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="foot">
+  <span>© <span id="year">2026</span> tryoncam, a company of One Man Holdings LLC. All rights reserved.</span>
+  <span class="foot-links"><a href="https://tryoncam.com/terms.html">Terms</a><a href="https://tryoncam.com/privacy.html">Privacy</a><a href="https://tryoncam.com/refunds.html">Refunds</a></span>
+</footer>
+
+<script type="module" src="./account.js"></script>
+</body>
+</html>

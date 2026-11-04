@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tryoncam Dashboard</title>
+<link rel="icon" href="./logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./dashboard.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <span class="name">tryoncam</span>
+  </div>
+  <!-- Five groups; each group's pages are sub-tabs (dashboard.js GROUPS). -->
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-group="overview" aria-selected="true">Overview</button>
+    <button class="tab" role="tab" data-group="customers" aria-selected="false">Customers</button>
+    <button class="tab" role="tab" data-group="money" aria-selected="false">Money</button>
+    <button class="tab" role="tab" data-group="content" aria-selected="false">Content</button>
+    <button class="tab" role="tab" data-group="system" aria-selected="false">System</button>
+  </nav>
+  <div class="topbar-right">
+    <div class="auth" id="auth"></div>
+    <select id="range" aria-label="Time range">
+      <option value="7">Last 7 days</option>
+      <option value="14" selected>Last 14 days</option>
+      <option value="30">Last 30 days</option>
+    </select>
+
+  </div>
+</header>
+
+<div class="signin-gate" id="gate" hidden>
+  <div class="gate-card">
+    <span class="mark" aria-hidden="true"></span>
+    <h1 id="gateTitle">Sign in to continue</h1>
+    <p id="gateBlurb">This dashboard shows what the try-on extension has spent. Sign in with the Google account allowed on this install.</p>
+    <div id="gateGoogle" hidden></div>
+    <p class="gate-or" id="gateOr" hidden>or</p>
+    <form id="gatePassword" hidden autocomplete="on">
+      <input type="password" id="gatePasswordInput" name="password" placeholder="Dashboard password"
+             autocomplete="current-password" aria-label="Dashboard password" required>
+      <button type="submit" class="gate-submit">Unlock</button>
+    </form>
+    <div id="googleButton"></div>
+    <p class="gate-error" id="gateError" hidden></p>
+  </div>
+</div>
+
+<main class="page">
+  <nav class="subtabs" id="subtabs" role="tablist" aria-label="Pages" hidden></nav>
+  <p class="banner" id="banner" hidden></p>
+
+  <!-- Overview ---------------------------------------------------------->
+  <section class="panel" data-panel="overview">
+    <div class="card account-card">
+      <div class="card-head">
+        <h3>Decart account</h3>
+        <span class="hint" id="accountHint"></span>
+        <button class="btn small" id="refreshBalance" type="button">Refresh balance</button>
+      </div>
+      <div class="tiles" id="accountTiles"></div>
+      <p class="chart-note" id="accountNote"></p>
+    </div>
+    <div class="range-head"><h3 id="rangeTitle">Last 14 days</h3><span class="hint">Every figure below covers the range picked at the top right</span></div>
+    <div class="tiles" id="tiles"></div>
+
+    <div class="chart-grid">
+      <figure class="card chart" data-metric="sessions">
+        <figcaption><h3>Sessions started</h3><span class="chart-total" data-role="total"></span></figcaption>
+        <div class="chart-host" data-role="host"><div class="chart-tip" hidden></div></div>
+      </figure>
+      <figure class="card chart" data-metric="credits">
+        <figcaption><h3>Decart credits used</h3><span class="chart-total" data-role="total"></span></figcaption>
+        <div class="chart-host" data-role="host"><div class="chart-tip" hidden></div></div>
+      </figure>
+      <figure class="card chart" data-metric="spentUsd">
+        <figcaption><h3>Dollars spent</h3><span class="chart-total" data-role="total"></span></figcaption>
+        <div class="chart-host" data-role="host"><div class="chart-tip" hidden></div></div>
+      </figure>
+      <figure class="card chart" data-metric="earnedUsd">
+        <figcaption><h3>Dollars earned</h3><span class="chart-total" data-role="total"></span></figcaption>
+        <div class="chart-host" data-role="host"><div class="chart-tip" hidden></div></div>
+        <p class="chart-note">Stripe payments in US dollars, on the day they were paid.</p>
+      </figure>
+    </div>
+
+    <details class="card table-view">
+      <summary>Table view — the same numbers, day by day</summary>
+      <div class="table-wrap">
+        <table class="grid"><thead><tr>
+          <th>Date</th><th class="num">Sessions</th><th class="num">Decart credits</th>
+          <th class="num">Billed</th><th class="num">Spent</th><th class="num">Earned</th>
+        </tr></thead><tbody id="seriesTable"></tbody></table>
+      </div>
+    </details>
+  </section>
+
+  <!-- Users ------------------------------------------------------------>
+  <section class="panel" data-panel="users" hidden>
+    <div class="tiles" id="userTiles"></div>
+    <div class="card">
+      <div class="card-head">
+        <h3>Accounts</h3>
+        <span class="hint" id="usersHint"></span>
+      </div>
+      <input class="search" id="userSearch" type="search" placeholder="Search by name or email" autocomplete="off">
+      <div class="table-wrap">
+        <table class="grid">
+          <thead><tr>
+            <th>Account</th><th>Joined</th><th class="num">Sessions</th><th class="num">Credits</th>
+            <th class="num">Purchases</th><th class="num">Spent</th><th>Last active</th><th>Adjust credits</th>
+          </tr></thead>
+          <tbody id="usersTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sessions ---------------------------------------------------------->
+  <section class="panel" data-panel="sessions" hidden>
+    <div class="card">
+      <div class="card-head">
+        <h3>Every session</h3>
+        <span class="hint" id="sessionsHint"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="grid"><thead><tr>
+          <th>When</th><th>Provider</th><th>Status</th><th class="num">Billed</th>
+          <th class="num">Cost</th><th class="num">TTFF</th><th>Note</th>
+        </tr></thead><tbody id="sessionsTable"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Costs -------------------------------------------------------------->
+  <section class="panel" data-panel="costs" hidden>
+    <div class="tiles" id="costTiles"></div>
+    <div class="card">
+      <div class="card-head"><h3>Spending cap</h3><span class="hint">A safety limit set in System → Environment, counted over all time. Not your Decart balance.</span></div>
+      <div id="budgetBars"></div>
+    </div>
+  </section>
+
+  <!-- Website --------------------------------------------------------------->
+  <section class="panel" data-panel="website" hidden data-scope="website">
+
+    <div class="card env-intro">
+      <p>The words, links and sections of <a class="link" href="https://tryoncam.com" target="_blank" rel="noopener">tryoncam.com</a>.
+      Saved changes show on the <b>next page load</b>, with no redeploy. The page keeps its built-in words as a fallback, and search engines read those, so
+      rewrite the page itself for SEO changes. Plans and the pricing section's words are on the <a href="#billing" class="link" data-goto="billing">Billing</a> tab.</p>
+      <p class="token-help">In any text: <code>{credits}</code> free credits on sign-in · <code>{seconds}</code> session length · <code>{email}</code> support address ·
+      <code>**bold**</code> · <code>[label](https://link)</code>. An empty optional field hides that line.</p>
+    </div>
+
+    <div id="websiteForm"></div>
+
+    <div class="card">
+      <div class="card-head"><h3>Support email</h3><span class="hint">Shown everywhere customers see a contact address</span></div>
+      <div class="fields">
+        <label class="field">
+          <span>Address customers write to</span>
+          <input type="email" data-path="contact.supportEmail" placeholder="support@tryoncam.com" autocomplete="off" spellcheck="false">
+        </label>
+        <p class="hint">Changes it on tryoncam.com (home, privacy, terms and refunds pages) and on every customer's account page, the moment you save. Leave it empty to go back to support@tryoncam.com.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Link preview</h3><span class="hint">The picture shown when someone shares a tryoncam.com link</span></div>
+      <div class="fields">
+        <div class="share-grid" id="shareGrid" role="radiogroup" aria-label="Link preview design"></div>
+        <label class="field">
+          <span>Or use your own image <em>an https link; 1200 × 630 fits every app</em></span>
+          <input type="url" id="shareCustom" placeholder="https://…" autocomplete="off" spellcheck="false">
+        </label>
+        <input type="hidden" data-path="share.image" id="shareImage">
+        <p class="hint">Live for new shares the moment you save. Apps keep previews they have already fetched for a while: to refresh a link now, paste it into the Facebook Sharing Debugger or LinkedIn's Post Inspector.</p>
+      </div>
+    </div>
+
+    <div class="actions sticky-actions">
+      <button class="btn primary" id="saveWebsite" type="button">Save &amp; update the website</button>
+      <button class="btn" data-discard type="button">Discard changes</button>
+      <a class="btn" href="https://tryoncam.com" target="_blank" rel="noopener">View the live page</a>
+    </div>
+  </section>
+
+  <!-- Brand assets ---------------------------------------------------------->
+  <section class="panel" data-panel="assets" hidden>
+    <div class="card assets-intro">
+      <div class="card-head">
+        <h3>Brand assets</h3>
+        <span class="hint" id="assetsHint">Loading…</span>
+      </div>
+      <p class="chart-note">Every logo, header, thumbnail, store image and video in one place, published at
+        <a class="link" href="https://tryoncam.com/assets/brand/" target="_blank" rel="noopener">tryoncam.com/assets/brand</a>.
+        To add or rebuild one, run <code>node scripts/build-brand-kit.mjs</code> and deploy the site.</p>
+      <div class="actions tight">
+        <a class="btn primary" id="assetsZip" href="#" download>Download everything</a>
+        <div class="chips asset-filters" id="assetFilters"></div>
+      </div>
+    </div>
+    <div class="card" id="assetsBrand"></div>
+    <div id="assetGroups"></div>
+  </section>
+
+  <!-- Extension ------------------------------------------------------------>
+  <section class="panel" data-panel="extension" hidden data-scope="extension">
+
+    <div class="card env-intro">
+      <p>Everything here reaches every installed extension <b>within a minute</b> of saving, with no new build and no Chrome Web Store review.
+      Controls marked <span class="new-tag">v1.1</span> need extension version 1.1 or later; older installs ignore them and keep working as before.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Try On buttons</h3><span class="hint">The button on every garment, on every shopping site</span></div>
+      <div class="fields">
+        <label class="field checkbox">
+          <input type="checkbox" data-path="extension.showPills">
+          <span><b>Show Try On buttons on pages</b> <span class="new-tag">v1.1</span> — off hides every button until you turn it back on.
+          The toolbar menu keeps working. Use the kill switch in Settings to stop sessions themselves.</span>
+        </label>
+        <label class="field">
+          <span>Button label <span class="new-tag">v1.1</span> <em>at most 24 characters</em></span>
+          <input type="text" data-path="texts.pillLabel" maxlength="24" placeholder="Try On" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Never show buttons on these sites <span class="new-tag">v1.1</span> <em>one per line · subdomains included · paste full links if you like</em></span>
+          <textarea data-path="extension.blockedSites" data-list="lines" rows="4" placeholder="example.com&#10;shop.example.co.uk" spellcheck="false"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>What gets a Try-On button</h3><span class="hint">On shopping sites</span></div>
+      <div class="fields">
+        <div class="field">
+          <label class="field checkbox"><input type="radio" name="discoveryMode" value="all" data-mode>
+            <span><b>Every product image</b> — jewellery, shoes and bags included. The model dresses a torso, so
+            these usually come out wrong (earrings rendered as a necklace).</span></label>
+          <label class="field checkbox"><input type="radio" name="discoveryMode" value="garments" data-mode>
+            <span><b>Clothing only</b> (recommended) — the categories below, plus any product the extension cannot
+            name, as long as it has a price or a product link.</span></label>
+        </div>
+        <div class="field" id="categoryField">
+          <span>Garment categories</span>
+          <div class="chips" id="categoryChips"></div>
+        </div>
+        <p class="chart-note">With "only these", shoes, bags, eyewear, jewellery and accessories are never offered: the
+        model dresses a torso, and handed one of those it puts the object somewhere it can — a bracelet rendered as sunglasses.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Toolbar menu announcement</h3><span class="hint">A note at the top of the menu that opens from the toolbar icon</span></div>
+      <div class="fields">
+        <label class="field">
+          <span>Message <span class="new-tag">v1.1</span> <em>empty hides it · at most 160 characters</em></span>
+          <input type="text" data-path="extension.announcement.text" maxlength="160" placeholder="New: our iPhone app is coming soon" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Link text <em>optional</em></span>
+          <input type="text" data-path="extension.announcement.linkLabel" maxlength="30" placeholder="Learn more" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Link <em>an https link</em></span>
+          <input type="url" data-path="extension.announcement.url" placeholder="https://tryoncam.com/#roadmap" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="field"><span>Preview</span><div class="announce-preview" id="announcePreview"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Tutorial video</h3><span class="hint">Shown from the extension's toolbar menu</span></div>
+      <div class="fields">
+        <label class="field">
+          <span>YouTube link, video ID, or a link to an .mp4</span>
+          <input type="text" data-path="tutorial.videoId" placeholder="https://tryoncam.com/assets/demo.mp4 or a YouTube link" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Window title</span>
+          <input type="text" data-path="tutorial.title" autocomplete="off">
+        </label>
+        <div class="preview" id="videoPreview"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Extension copy</h3><span class="hint">What customers read in the trial room</span></div>
+      <div class="fields" id="textFields"></div>
+    </div>
+
+    <div class="actions sticky-actions">
+      <button class="btn primary" id="saveExtension" type="button">Save &amp; push to the extension</button>
+      <button class="btn" data-discard type="button">Discard changes</button>
+    </div>
+  </section>
+
+  <!-- Settings ------------------------------------------------------------>
+  <section class="panel" data-panel="settings" hidden data-scope="settings">
+
+    <div class="card">
+      <div class="card-head"><h3>Run controls</h3><span class="hint">Applies to new sessions immediately · the words customers read are on the <a href="#website" class="link" data-goto="website">Website</a> and <a href="#extension" class="link" data-goto="extension">Extension</a> tabs</span></div>
+      <div class="fields">
+        <label class="field">
+          <span>Active provider</span>
+          <select data-run="provider" id="setProvider"></select>
+        </label>
+        <label class="field">
+          <span>Session length <em data-role="lenCost"></em></span>
+          <div class="slider-row">
+            <input type="range" id="setSeconds" min="10" max="60" step="1">
+            <output id="setSecondsOut">15s</output>
+          </div>
+        </label>
+        <label class="field checkbox">
+          <input type="checkbox" id="setKill">
+          <span><b>Kill switch</b> — refuse every new session, both providers</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="saveSettings">Save run controls</button>
+    </div>
+  </section>
+
+  <!-- Providers ---------------------------------------------------------->
+  <section class="panel" data-panel="providers" hidden>
+    <div class="provider-grid" id="providerCards"></div>
+  </section>
+
+  <!-- Billing ------------------------------------------------------------>
+  <section class="panel" data-panel="billing" hidden>
+
+    <div class="card">
+      <div class="card-head"><h3>Connections</h3><span class="hint">Keys are managed in the <a href="#environment" class="link" data-goto="environment">Environment</a> tab</span></div>
+      <div class="status-rows" id="billingStatus"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Credits</h3><span class="hint">1 credit = one live session</span></div>
+      <div class="fields">
+        <label class="field">
+          <span>Free credits on first sign-in</span>
+          <input type="number" id="signupCredits" min="0" max="100" step="1">
+        </label>
+        <label class="field checkbox">
+          <input type="checkbox" id="requireCredits">
+          <span><b>Sessions cost a credit</b> — off lets every signed-in customer try on for free. Admins never pay.</span>
+        </label>
+        <div class="actions tight"><button class="btn" id="saveBillingSettings">Save credit rules</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Plans</h3>
+        <span class="hint">What customers see and buy, in this order — click a plan to edit it</span>
+      </div>
+      <div class="plans-editor" id="plansEditor"></div>
+      <div class="actions tight">
+        <button class="btn" id="addPlan" type="button">Add a plan</button>
+        <button class="btn primary" id="savePlans" type="button">Save plans</button>
+        <button class="btn" id="checkPlans" type="button">Check price IDs with Stripe</button>
+      </div>
+      <p class="chart-note">A plan without a price ID is shown but cannot be bought. Checkout re-checks the price with
+      Stripe at the moment of sale and refuses if the amount, currency or billing type differ from what is shown here.
+      Recurring plans add their credits on every paid renewal; changing a plan's credits later does not change what
+      existing subscribers receive.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Price check</h3>
+        <span class="hint" id="priceCheckWhen"></span>
+      </div>
+      <p class="chart-note" style="margin:0 0 12px">What each plan shows customers, beside what its Stripe price ID
+      would actually charge. Checked when you open this tab and after every save.</p>
+      <div class="table-wrap">
+        <table class="grid price-check">
+          <thead><tr><th>Plan</th><th>On the platform</th><th>In Stripe</th><th>Price ID</th><th>Status</th></tr></thead>
+          <tbody id="priceCheckTable"><tr class="empty-row"><td colspan="5">Checking…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Pricing page</h3>
+        <span class="hint">The pricing section of <a class="link" href="https://tryoncam.com/#pricing" target="_blank" rel="noopener">tryoncam.com</a>
+          — plans above appear there automatically, in the same order</span>
+      </div>
+      <div class="plan-grid" id="pricingCopy">
+        <label class="field"><span>Small label above</span><input data-p="eyebrow"></label>
+        <label class="field wide"><span>Heading</span><input data-p="heading"></label>
+        <label class="field wide"><span>Intro</span><textarea data-p="lede" rows="2"></textarea></label>
+        <label class="field wide"><span>Credit note <em>the pill under the intro · {seconds} becomes the session length set in Run controls</em></span><input data-p="note"></label>
+        <label class="field checkbox wide"><input type="checkbox" data-p="showFree">
+          <span><b>Show the free plan card</b> — its credits follow "Free credits on first sign-in"</span></label>
+        <label class="field"><span>Free card name</span><input data-p="freeName"></label>
+        <label class="field"><span>Free card small print</span><input data-p="freeNote"></label>
+        <label class="field"><span>Free card button</span><input data-p="freeCta"></label>
+        <label class="field wide"><span>Free card features <em>one per line</em></span><textarea data-p="freeFeatures" rows="3"></textarea></label>
+        <div class="field wide"><span>Three notes under the plans</span>
+          <div class="foot-rows" id="pricingFoot"></div>
+        </div>
+      </div>
+      <div class="actions tight">
+        <button class="btn primary" id="savePricing" type="button">Save &amp; update the website</button>
+        <a class="btn" href="https://tryoncam.com/#pricing" target="_blank" rel="noopener">View the live page</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Environment -------------------------------------------------------->
+  <section class="panel" data-panel="environment" hidden>
+
+    <div class="card env-intro">
+      <p>Values saved here <b>override Vercel's environment variables</b> and reach every server within 30 seconds —
+      no redeploy, nothing for a developer to push. <b>Use Vercel value</b> removes an override. Every new key is tested
+      before it is saved, keys are stored encrypted, and this page only ever shows the last four characters.</p>
+      <p class="env-lock" id="envLock" hidden></p>
+    </div>
+
+    <div class="card" id="googleCard">
+      <div class="card-head"><h3>Google sign-in</h3><span class="hint" id="authStatus"></span></div>
+      <div class="fields">
+        <label class="field">
+          <span>Web client ID <em>one client signs in the dashboard and the extension</em></span>
+          <input type="text" data-path="auth.webClientId" placeholder="….apps.googleusercontent.com" autocomplete="off">
+        </label>
+        <div class="field">
+          <span>Paste these into that client in Google Cloud</span>
+          <div class="copy-rows">
+            <div class="copy-row"><em>Authorised JavaScript origin</em><code id="googleOrigin">…</code></div>
+            <div class="copy-row"><em>Authorised redirect URI</em><code id="googleRedirect">…</code></div>
+          </div>
+        </div>
+        <label class="field">
+          <span>Admin emails <em>who may open this dashboard; customers never can</em></span>
+          <input type="text" data-path="auth.allowedEmails" placeholder="you@gmail.com, teammate@gmail.com" autocomplete="off">
+          <small class="field-note" id="envAdmins"></small>
+        </label>
+        <label class="field checkbox">
+          <input type="checkbox" data-path="auth.required">
+          <span><b>Require sign-in</b> — off lets anyone read the dashboard once configured</span>
+        </label>
+        <div class="actions tight"><button class="btn primary" id="saveGoogle" type="button">Save sign-in settings</button></div>
+      </div>
+    </div>
+
+
+    <div class="card" data-env-group="stripe">
+      <div class="card-head"><h3>Stripe</h3><span class="hint">Payments</span></div>
+      <div class="env-rows"></div>
+    </div>
+
+    <div class="card" data-env-group="provider">
+      <div class="card-head"><h3>AI provider</h3><span class="hint">Decart: what try-ons run on, and what they may spend</span></div>
+      <div class="env-rows"></div>
+    </div>
+
+    <div class="card" data-env-group="database">
+      <div class="card-head"><h3>Database</h3><span class="hint">Supabase: accounts, credits, payments</span></div>
+      <div class="env-rows"></div>
+    </div>
+
+    <div class="card" data-env-group="limits">
+      <div class="card-head"><h3>Limits</h3><span class="hint">Guardrails on every session</span></div>
+      <div class="env-rows"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Set on Vercel only</h3><span class="hint">Deliberately not editable here</span></div>
+      <div class="env-readonly" id="envReadonly"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Change log</h3><span class="hint">Who changed what, most recent first</span></div>
+      <div class="table-wrap">
+        <table class="grid">
+          <thead><tr><th>When</th><th>Who</th><th>Variable</th><th>Change</th></tr></thead>
+          <tbody id="envAudit"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="./dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>tryoncam: launch spot</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Bricolage Grotesque"; src: url("assets/fonts/BricolageGrotesque.woff2") format("woff2"); font-weight: 200 800; }
+      @font-face { font-family: "Geist"; src: url("assets/fonts/Geist.woff2") format("woff2"); font-weight: 100 900; }
+      @font-face { font-family: "Geist Mono"; src: url("assets/fonts/GeistMono.woff2") format("woff2"); font-weight: 500; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f6f5f1; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Geist", system-ui, sans-serif; color: #0e0f12; -webkit-font-smoothing: antialiased; }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .cream { background: #f6f5f1; }
+      .ink { background: #0e0f12; color: #f6f5f1; }
+      .stage { position: absolute; inset: 0; }
+      .display { font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 800; letter-spacing: -0.045em; line-height: 0.95; }
+      .mono { font-family: "Geist Mono", ui-monospace, monospace; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; }
+      .blue { color: #3d5bf5; }
+      .line { display: block; line-height: 1.1; }
+
+      /* 1 · hook */
+      #hook-copy { position: absolute; left: 160px; right: 160px; top: 250px; }
+      #hook-copy .l1 { font-size: 120px; }
+      #hook-copy .l2 { font-size: 210px; margin-top: 10px; }
+      #hook-copy .l3 { font-size: 120px; margin-top: 18px; }
+      #hook-under { position: absolute; left: 160px; top: 630px; width: 1150px; height: 18px; border-radius: 9px; background: #3d5bf5; transform-origin: 0 50%; }
+
+      /* 2 · online vs on you */
+      #vs-head { position: absolute; left: 0; right: 0; top: 90px; text-align: center; font-size: 84px; }
+      .vs-card { position: absolute; top: 280px; width: 560px; height: 680px; border-radius: 28px; overflow: hidden; background: #fff; box-shadow: 0 30px 70px -24px rgba(14,15,18,.35); }
+      .vs-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .vs-card .tag { position: absolute; left: 24px; top: 24px; padding: 12px 20px; border-radius: 999px; background: #0e0f12; color: #fff; font-size: 22px; }
+      #vs-left { left: 260px; }
+      #vs-right { right: 260px; }
+      #vs-left .shopbar { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 26px; background: #fff; display: flex; justify-content: space-between; font-size: 26px; font-weight: 600; }
+      #vs-neq { position: absolute; left: 0; right: 0; top: 500px; text-align: center; font-size: 220px; color: #3d5bf5; }
+
+      /* 3 · reveal */
+      #rev-wipe { position: absolute; left: 960px; top: 540px; width: 2400px; height: 2400px; margin: -1200px 0 0 -1200px; border-radius: 50%; background: #3d5bf5; }
+      #rev-mark { position: absolute; left: 50%; top: 300px; width: 240px; height: 240px; margin-left: -120px; }
+      #rev-word { position: absolute; left: 0; right: 0; top: 590px; text-align: center; font-size: 190px; color: #fff; }
+      #rev-word span { display: inline-block; }
+
+      /* 4 · the product */
+      #browser { position: absolute; left: 90px; top: 150px; width: 1010px; height: 780px; border-radius: 22px; overflow: hidden; background: #fff; box-shadow: 0 30px 80px -30px rgba(14,15,18,.35); }
+      #browser .bar { height: 52px; background: #1a1c21; display: flex; align-items: center; gap: 10px; padding: 0 18px; }
+      #browser .bar i { width: 13px; height: 13px; border-radius: 50%; background: #3a3d44; }
+      #browser .bar i:nth-child(1) { background: #ff5f57; } #browser .bar i:nth-child(2) { background: #febc2e; } #browser .bar i:nth-child(3) { background: #28c840; }
+      #browser .url { margin-left: 22px; height: 32px; flex: 1; max-width: 560px; border-radius: 8px; background: #26292f; color: #9aa0aa; font: 500 16px/32px "Geist Mono", monospace; padding: 0 14px; }
+      #grid { position: absolute; left: 36px; top: 88px; display: grid; grid-template-columns: repeat(3, 298px); grid-auto-rows: 300px; gap: 22px; }
+      .prod { position: relative; border-radius: 14px; overflow: hidden; background: #eee; }
+      .prod img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .pill { position: absolute; left: 12px; top: 12px; padding: 9px 15px 9px 17px; border-radius: 999px; background: #111; color: #fff; font: 600 17px/1 ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.35); white-space: nowrap; }
+      #store-head { position: absolute; left: 1180px; top: 250px; width: 660px; font-size: 104px; }
+      #panel { position: absolute; left: 1170px; top: 110px; width: 660px; height: 860px; border-radius: 26px; background: #0d0f12; border: 1px solid #23272e; box-shadow: 0 30px 80px rgba(0,0,0,.45); overflow: hidden; }
+      #panel .head { height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 20px; color: #fff; font: 700 21px/1 ui-sans-serif, -apple-system, system-ui, sans-serif; }
+      #panel .head img { width: 32px; height: 32px; border-radius: 9px; }
+      #panel .dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 5px rgba(34,197,94,.25); margin: 0 4px; }
+      #panel .chip { padding: 6px 12px; border-radius: 999px; background: rgba(250,204,21,.12); border: 1px solid rgba(250,204,21,.28); color: #fde68a; font-size: 16px; font-weight: 600; }
+      #panel .status { margin-left: auto; color: #8d95a1; font-size: 16px; font-weight: 500; }
+      #panel .body { position: absolute; left: 12px; right: 12px; top: 64px; bottom: 12px; border-radius: 16px; overflow: hidden; background: #fff; }
+      #panel .feed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      #meter span { display: block; } #meter span + span { position: absolute; left: 16px; top: 8px; opacity: 0; }
+      #meter { position: absolute; left: 16px; top: 16px; padding: 8px 16px; border-radius: 999px; background: rgba(0,0,0,.62); color: #fff; font: 700 26px/1 ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+      .cap { position: absolute; left: 1200px; top: 820px; padding: 18px 28px; border-radius: 18px; background: rgba(14,15,18,.82); color: #fff; font-size: 44px; }
+      #instant { position: absolute; left: 1210px; top: 420px; padding: 20px 40px; border-radius: 22px; background: #3d5bf5; color: #fff; font-size: 120px; box-shadow: 0 24px 60px rgba(61,91,245,.5); }
+      #cursor { position: absolute; left: 0; top: 0; width: 44px; height: 44px; }
+
+      /* 5 · no list */
+      .no { position: absolute; left: 200px; font-size: 150px; display: flex; align-items: center; gap: 40px; }
+      .no .x { width: 110px; height: 110px; flex: none; border-radius: 50%; background: #3d5bf5; display: grid; place-items: center; }
+      #no1 { top: 170px; } #no2 { top: 420px; } #no3 { top: 670px; }
+
+      /* 6 · see it try it decide */
+      .std { position: absolute; top: 180px; width: 520px; }
+      .std .ph { width: 520px; height: 560px; border-radius: 26px; overflow: hidden; box-shadow: 0 28px 70px -26px rgba(14,15,18,.4); }
+      .std .ph img { width: 100%; height: 100%; object-fit: cover; }
+      .std .w { margin-top: 34px; font-size: 92px; text-align: center; }
+      #std1 { left: 110px; } #std2 { left: 700px; } #std3 { left: 1290px; }
+
+      /* 7 · outro */
+      #out-glow { position: absolute; left: 960px; top: 470px; width: 1400px; height: 1400px; margin: -700px 0 0 -700px; border-radius: 50%; background: radial-gradient(closest-side, rgba(61,91,245,.55), rgba(139,124,246,.18) 55%, transparent); }
+      #out-mark { position: absolute; left: 50%; top: 130px; width: 190px; height: 190px; margin-left: -95px; }
+      #out-word { position: absolute; left: 0; right: 0; top: 350px; text-align: center; font-size: 170px; color: #fff; }
+      #out-free { position: absolute; left: 50%; top: 560px; width: 520px; margin-left: -260px; text-align: center; padding: 18px 0; border-radius: 999px; background: #facc15; color: #0e0f12; font-size: 44px; font-weight: 700; }
+      #out-line { position: absolute; left: 0; right: 0; top: 680px; text-align: center; font-size: 84px; color: #fff; }
+      #out-cta { position: absolute; left: 50%; top: 840px; width: 560px; margin-left: -280px; text-align: center; padding: 24px 0; border-radius: 999px; background: #fff; color: #0e0f12; font-size: 36px; font-weight: 700; }
+      #cta-ring { position: absolute; left: 50%; top: 840px; width: 560px; height: 86px; margin-left: -280px; border-radius: 999px; border: 3px solid rgba(255,255,255,.5); opacity: 0; }
+      #out-url { position: absolute; left: 0; right: 0; top: 960px; text-align: center; font-size: 28px; color: #aab4ff; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="23.5" data-width="1920" data-height="1080">
+
+      <!-- 1 · hook -->
+      <section id="s-hook" class="scene cream clip" data-start="0" data-duration="2.45" data-track-index="0">
+        <div id="hook-stage" class="stage">
+          <div id="hook-copy" class="display">
+            <span id="h1" class="line l1">What if you could</span>
+            <span id="h2" class="line l2 blue">try anything</span>
+            <span id="h3" class="line l3">before you buy it?</span>
+          </div>
+          <div id="hook-under"></div>
+        </div>
+      </section>
+
+      <!-- 2 · online vs on you -->
+      <section id="s-vs" class="scene cream clip" data-start="2.45" data-duration="3.2" data-track-index="0">
+        <div id="vs-stage" class="stage">
+          <div id="vs-head" class="display"><span id="vs-a">Seeing it online</span> <span id="vs-b" class="blue">isn't seeing it on you.</span></div>
+          <div id="vs-left" class="vs-card"><img src="assets/img/f-heritage.jpg" alt="" /><div class="tag mono">Online</div><div class="shopbar"><span>Heritage shirt</span><span>$48</span></div></div>
+          <div id="vs-neq" class="display">≠</div>
+          <div id="vs-right" class="vs-card"><img src="assets/img/m-heritage.jpg" alt="" /><div class="tag mono">On you</div></div>
+        </div>
+      </section>
+
+      <!-- 3 · reveal -->
+      <section id="s-rev" class="scene cream clip" data-start="5.65" data-duration="1.4" data-track-index="0">
+        <div id="rev-wipe" data-layout-allow-overflow></div>
+        <img id="rev-mark" src="assets/img/logo-mark.svg" alt="" />
+        <div id="rev-word" class="display"><span>try</span><span>on</span><span>cam</span></div>
+      </section>
+
+      <!-- 4 · the product: store → Try On → live → swap -->
+      <section id="s-prod" class="scene cream clip" data-start="7.05" data-duration="5.9" data-track-index="0">
+        <div id="prod-stage" class="stage">
+          <div id="browser">
+            <div class="bar"><i></i><i></i><i></i><div class="url">yourfavouritestore.com/new-in/shirts</div></div>
+            <div id="grid">
+              <div class="prod"><img src="assets/img/f-heritage.jpg" alt="" /><div class="pill" id="p0">Try On</div></div>
+              <div class="prod"><img src="assets/img/f-love.jpg" alt="" /><div class="pill" id="p1">Try On</div></div>
+              <div class="prod"><img src="assets/img/f-pinstripe.jpg" alt="" /><div class="pill" id="p2">Try On</div></div>
+              <div class="prod"><img src="assets/img/f-shorts.jpg" alt="" /><div class="pill" id="p3">Try On</div></div>
+              <div class="prod"><img src="assets/img/f-coral.jpg" alt="" /><div class="pill" id="p4">Try On</div></div>
+              <div class="prod"><img src="assets/img/f-cocaine.jpg" alt="" /><div class="pill" id="p5">Try On</div></div>
+            </div>
+          </div>
+          <div id="store-head" class="display">
+            <span id="sh1" class="line">Try on clothes</span>
+            <span id="sh2" class="line">from the stores</span>
+            <span id="sh3" class="line blue">you already shop.</span>
+          </div>
+          <div id="panel">
+            <div class="head"><img src="assets/img/logo-mark.svg" alt="" />tryoncam<span class="dot"></span><span class="chip" id="chip">2 sessions</span><span class="status" id="pstatus">Live</span></div>
+            <div class="body">
+              <img id="feedA" class="feed" src="assets/img/m-heritage.jpg" alt="" />
+              <img id="feedB" class="feed" src="assets/img/m-coral.jpg" alt="" />
+              <div id="meter"><span id="m15">0:15</span><span id="m14">0:14</span><span id="m13">0:13</span><span id="m12">0:12</span></div>
+            </div>
+          </div>
+          <div id="cap1" class="cap display">Right through your camera.</div>
+          <div id="instant" class="display">Instantly.</div>
+          <div id="cap2" class="cap display">Don't like it? <span class="blue" style="color:#8ea2ff">Swap it.</span></div>
+          <svg id="cursor" viewBox="0 0 28 28"><path d="M5 3 L5 22 L10 17.5 L13.6 25 L16.8 23.6 L13.3 16.3 L20 16.3 Z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+      </section>
+
+      <!-- 5 · no changing rooms / screenshots / guessing -->
+      <section id="s-no" class="scene ink clip" data-start="12.95" data-duration="3.3" data-track-index="0">
+        <div id="no-stage" class="stage">
+          <div id="no1" class="no display"><span class="x"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><span class="blue" style="color:#8ea2ff">No</span> changing rooms.</span></div>
+          <div id="no2" class="no display"><span class="x"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><span class="blue" style="color:#8ea2ff">No</span> screenshots.</span></div>
+          <div id="no3" class="no display"><span class="x"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><span class="blue" style="color:#8ea2ff">No</span> guessing.</span></div>
+        </div>
+      </section>
+
+      <!-- 6 · see it, try it, then decide -->
+      <section id="s-std" class="scene cream clip" data-start="16.25" data-duration="2.15" data-track-index="0">
+        <div id="std-stage" class="stage">
+          <div id="std1" class="std"><div class="ph"><img src="assets/img/f-love.jpg" alt="" /></div><div class="w display">See it.</div></div>
+          <div id="std2" class="std"><div class="ph"><img src="assets/img/m-love.jpg" alt="" /></div><div class="w display">Try it.</div></div>
+          <div id="std3" class="std"><div class="ph"><img src="assets/img/m-coral.jpg" alt="" /></div><div class="w display blue">Then decide.</div></div>
+        </div>
+      </section>
+
+      <!-- 7 · outro -->
+      <section id="s-out" class="scene ink clip" data-start="18.4" data-duration="5.1" data-track-index="0">
+        <div id="out-glow" data-layout-allow-overflow></div>
+        <img id="out-mark" src="assets/img/logo-mark.svg" alt="" />
+        <div id="out-word" class="display">tryoncam</div>
+        <div id="out-free">3 free try-ons</div>
+        <div id="out-line" class="display">Start shopping differently.</div>
+        <div id="cta-ring"></div>
+        <div id="out-cta">Add to Chrome — it's free</div>
+        <div id="out-url" class="mono">tryoncam.com</div>
+      </section>
+
+      <!-- voiceover: one clip per line, the edit follows the voice -->
+      <audio id="vo01" src="assets/vo/l01.wav" data-start="0.30" data-duration="1.99" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo02" src="assets/vo/l02.wav" data-start="2.55" data-duration="2.86" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo03" src="assets/vo/l03.wav" data-start="5.85" data-duration="0.94" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo04" src="assets/vo/l04.wav" data-start="7.10" data-duration="2.12" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo05" src="assets/vo/l05.wav" data-start="9.42" data-duration="1.01" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo06" src="assets/vo/l06.wav" data-start="10.58" data-duration="0.67" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo07" src="assets/vo/l07.wav" data-start="11.55" data-duration="1.23" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo08" src="assets/vo/l08.wav" data-start="13.03" data-duration="1.12" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo09" src="assets/vo/l09.wav" data-start="14.27" data-duration="0.94" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo10" src="assets/vo/l10.wav" data-start="15.33" data-duration="0.72" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo11" src="assets/vo/l11.wav" data-start="16.35" data-duration="1.67" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo12" src="assets/vo/l12.wav" data-start="18.47" data-duration="0.74" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo13" src="assets/vo/l13.wav" data-start="19.41" data-duration="1.05" data-track-index="3" data-volume="1"></audio>
+      <audio id="vo14" src="assets/vo/l14.wav" data-start="20.66" data-duration="1.21" data-track-index="3" data-volume="1"></audio>
+
+      <!-- sfx: sparse, under the voice -->
+      <audio id="fx-anything" src="assets/sfx/impactSoft_medium_001.ogg" data-start="0.95" data-duration="0.4" data-track-index="11" data-volume="0.5"></audio>
+      <audio id="fx-neq" src="assets/sfx/impactSoft_medium_004.ogg" data-start="3.45" data-duration="0.4" data-track-index="12" data-volume="0.5"></audio>
+      <audio id="fx-wipe" src="assets/sfx/impactSoft_heavy_003.ogg" data-start="5.65" data-duration="0.6" data-track-index="13" data-volume="0.5"></audio>
+      <audio id="fx-mark" src="assets/sfx/bong_001.ogg" data-start="5.85" data-duration="0.4" data-track-index="14" data-volume="0.55"></audio>
+      <audio id="fx-pills" src="assets/sfx/rollover2.ogg" data-start="7.75" data-duration="0.3" data-track-index="15" data-volume="0.45"></audio>
+      <audio id="fx-click1" src="assets/sfx/click2.ogg" data-start="9.28" data-duration="0.3" data-track-index="16" data-volume="0.7"></audio>
+      <audio id="fx-open" src="assets/sfx/card-slide-1.ogg" data-start="9.4" data-duration="0.6" data-track-index="17" data-volume="0.4"></audio>
+      <audio id="fx-instant" src="assets/sfx/impactSoft_medium_001.ogg" data-start="10.58" data-duration="0.4" data-track-index="18" data-volume="0.55"></audio>
+      <audio id="fx-click2" src="assets/sfx/click2.ogg" data-start="12.2" data-duration="0.3" data-track-index="19" data-volume="0.7"></audio>
+      <audio id="fx-swap" src="assets/sfx/card-slide-1.ogg" data-start="12.35" data-duration="0.6" data-track-index="20" data-volume="0.4"></audio>
+      <audio id="fx-no1" src="assets/sfx/impactSoft_medium_004.ogg" data-start="13.03" data-duration="0.4" data-track-index="21" data-volume="0.5"></audio>
+      <audio id="fx-no2" src="assets/sfx/impactSoft_medium_004.ogg" data-start="14.27" data-duration="0.4" data-track-index="22" data-volume="0.5"></audio>
+      <audio id="fx-no3" src="assets/sfx/impactSoft_medium_004.ogg" data-start="15.33" data-duration="0.4" data-track-index="23" data-volume="0.5"></audio>
+      <audio id="fx-see" src="assets/sfx/click_003.ogg" data-start="16.35" data-duration="0.2" data-track-index="24" data-volume="0.5"></audio>
+      <audio id="fx-try" src="assets/sfx/click_003.ogg" data-start="16.93" data-duration="0.2" data-track-index="25" data-volume="0.5"></audio>
+      <audio id="fx-decide" src="assets/sfx/click_003.ogg" data-start="17.45" data-duration="0.2" data-track-index="26" data-volume="0.5"></audio>
+      <audio id="fx-logo" src="assets/sfx/impactBell_heavy_000.ogg" data-start="18.45" data-duration="1.5" data-track-index="27" data-volume="0.45"></audio>
+      <audio id="fx-cta" src="assets/sfx/click_003.ogg" data-start="21.95" data-duration="0.2" data-track-index="28" data-volume="0.5"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const slam = { duration: 0.42, ease: "back.out(1.8)" };
+      const rise = (sel, at, extra = {}) =>
+        tl.fromTo(sel, { y: 70, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, ...slam, ...extra }, at);
+      // Every scene opens with a small punch-in, so hard cuts feel kinetic.
+      const punch = (sel, at) => tl.fromTo(sel, { scale: 1.07 }, { scale: 1, duration: 0.5, ease: "power3.out" }, at);
+
+      /* 1 · hook — words land with the voice (vo01 at 0.30) */
+      rise("#h1", 0.3);
+      tl.fromTo("#h2", { scale: 1.6, opacity: 0, filter: "blur(18px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out", transformOrigin: "0% 60%" }, 0.95);
+      tl.fromTo("#hook-under", { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power4.out" }, 1.2);
+      rise("#h3", 1.75);
+      tl.fromTo("#hook-stage", { x: 0 }, { x: -40, duration: 2.45, ease: "none" }, 0);
+
+      /* 2 · online ≠ on you (vo02 at 2.55) */
+      punch("#vs-stage", 2.45);
+      rise("#vs-a", 2.55);
+      tl.fromTo("#vs-left", { x: -140, opacity: 0, rotation: -6 }, { x: 0, opacity: 1, rotation: -3, duration: 0.55, ease: "power4.out" }, 2.7);
+      tl.fromTo("#vs-neq", { scale: 0, opacity: 0, rotation: -40 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.45, ease: "back.out(2.2)" }, 3.45);
+      rise("#vs-b", 3.9);
+      tl.fromTo("#vs-right", { x: 140, opacity: 0, rotation: 6 }, { x: 0, opacity: 1, rotation: 3, duration: 0.55, ease: "power4.out" }, 4.35);
+
+      /* 3 · reveal (vo03 "Meet tryoncam" at 5.85) */
+      tl.fromTo("#rev-wipe", { scale: 0 }, { scale: 1, duration: 0.55, ease: "power3.inOut" }, 5.65);
+      tl.fromTo("#rev-mark", { scale: 0, rotation: -25, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.5, ease: "back.out(2.4)" }, 5.85);
+      tl.fromTo("#rev-word span", { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)", stagger: 0.08 }, 6.0);
+
+      /* 4 · the product (vo04 7.10 · vo05 9.42 · vo06 10.58 · vo07 11.55) */
+      punch("#prod-stage", 7.05);
+      tl.fromTo("#browser", { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power4.out" }, 7.05);
+      rise("#sh1", 7.12); rise("#sh2", 7.75); rise("#sh3", 8.35);
+      tl.fromTo(".pill", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.28, ease: "back.out(2.2)", stagger: 0.09, transformOrigin: "20% 50%" }, 7.75);
+      // Cursor: in from the right, onto the Heritage shirt's Try On, click.
+      tl.fromTo("#cursor", { x: 1040, y: 980, opacity: 0 }, { x: 760, y: 700, opacity: 1, duration: 0.6, ease: "power2.out" }, 7.9);
+      tl.to("#cursor", { x: 172, y: 262, duration: 0.8, ease: "power3.inOut" }, 8.5);
+      tl.to("#p0", { scale: 0.9, background: "#000", duration: 0.08, yoyo: true, repeat: 1 }, 9.28);
+      tl.to("#cursor", { scale: 0.85, duration: 0.08, yoyo: true, repeat: 1, transformOrigin: "10% 10%" }, 9.28);
+      tl.to("#store-head", { y: -60, opacity: 0, duration: 0.3, ease: "power2.in" }, 9.3);
+      tl.fromTo("#panel", { y: 80, scale: 0.9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.5)" }, 9.42);
+      tl.fromTo("#feedA", { scale: 1.12 }, { scale: 1.04, duration: 3.4, ease: "sine.inOut" }, 9.42);
+      tl.fromTo("#cap1", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 9.55);
+      tl.to("#cap1", { opacity: 0, duration: 0.2 }, 10.5);
+      tl.fromTo("#instant", { scale: 2.4, opacity: 0, rotation: 8 }, { scale: 1, opacity: 1, rotation: -4, duration: 0.32, ease: "expo.out" }, 10.58);
+      tl.to("#instant", { scale: 0.8, opacity: 0, duration: 0.22, ease: "power2.in" }, 11.35);
+      // The countdown ticks down while live.
+      ["#m14", "#m13", "#m12"].forEach((sel, i) => {
+        tl.set(i ? ["#m15", "#m14", "#m13"][i] : "#m15", { opacity: 0 }, 9.42 + i + 1);
+        tl.set(sel, { opacity: 1 }, 9.42 + i + 1);
+      });
+      tl.fromTo("#cap2", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 11.55);
+      tl.to("#cursor", { x: 492, y: 584, duration: 0.7, ease: "power3.inOut" }, 11.45);
+      tl.to("#p4", { scale: 0.9, background: "#000", duration: 0.08, yoyo: true, repeat: 1 }, 12.2);
+      tl.to("#cursor", { scale: 0.85, duration: 0.08, yoyo: true, repeat: 1, transformOrigin: "10% 10%" }, 12.2);
+      tl.fromTo("#feedB", { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1.03, duration: 0.35, ease: "power2.out" }, 12.35);
+
+      /* 5 · no list (vo08 13.03 · vo09 14.27 · vo10 15.33) */
+      punch("#no-stage", 12.95);
+      [["#no1", 13.03], ["#no2", 14.27], ["#no3", 15.33]].forEach(([sel, at], i, all) => {
+        tl.fromTo(sel, { x: -160, opacity: 0 }, { x: 0, opacity: 1, duration: 0.38, ease: "power4.out" }, at);
+        tl.fromTo(sel + " .x", { scale: 0, rotation: -90 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(2.4)" }, at + 0.05);
+        if (i < all.length - 1) tl.to(sel, { opacity: 0.32, duration: 0.25 }, all[i + 1][1] - 0.05);
+      });
+
+      /* 6 · see it, try it, then decide (vo11 16.35) */
+      [["#std1", 16.35], ["#std2", 16.93], ["#std3", 17.45]].forEach(([sel, at]) => {
+        tl.fromTo(sel, { y: 160, opacity: 0, rotation: 3 }, { y: 0, opacity: 1, rotation: 0, duration: 0.42, ease: "back.out(1.4)" }, at);
+      });
+
+      /* 7 · outro (vo12 18.47 · vo13 19.41 · vo14 20.66) */
+      tl.fromTo("#out-glow", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: "power2.out" }, 18.4);
+      tl.fromTo("#out-mark", { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.55, ease: "back.out(2.2)" }, 18.45);
+      tl.fromTo("#out-word", { y: 80, opacity: 0, scale: 1.12 }, { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "expo.out" }, 18.5);
+      tl.fromTo("#out-free", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.2)" }, 19.41);
+      rise("#out-line", 20.66);
+      tl.fromTo("#out-cta", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, 21.95);
+      tl.set("#cta-ring", { opacity: 1 }, 22.4);
+      tl.fromTo("#out-url", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 22.2);
+      tl.to("#cta-ring", { scale: 1.18, opacity: 0, duration: 0.9, ease: "power2.out", repeat: 1 }, 22.4);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

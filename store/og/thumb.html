@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>tryoncam thumbnails</title>
+<!--
+  Share and video thumbnails. One design per ?v=, sized by ?w= and ?h=
+  (1200x630 for link previews, 1280x720 for YouTube). Rendered to PNG by
+  build.sh; every size is laid out in units of the frame height (--u).
+-->
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; src: url("assets/BricolageGrotesque.woff2") format("woff2"); font-weight: 200 800; }
+  @font-face { font-family: "Geist"; src: url("assets/Geist.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "Geist Mono"; src: url("assets/GeistMono.woff2") format("woff2"); font-weight: 500; }
+  :root { --ink: #0e0f12; --cream: #f6f5f1; --accent: #3d5bf5; --soft: #8ea2ff; --muted: #5b6472; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; }
+  #frame { position: relative; overflow: hidden; width: var(--W); height: var(--H); font-family: "Geist", system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .display { font-family: "Bricolage Grotesque", system-ui, sans-serif; font-weight: 800; letter-spacing: -0.045em; line-height: 0.98; }
+  .mono { font-family: "Geist Mono", monospace; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+  .brand { display: flex; align-items: center; gap: calc(var(--u) * 12); font: 700 calc(var(--u) * 30)/1 "Bricolage Grotesque", sans-serif; letter-spacing: -.03em; }
+  .brand img { width: calc(var(--u) * 46); height: calc(var(--u) * 46); }
+  .chip { display: inline-flex; align-items: center; gap: calc(var(--u) * 10); padding: calc(var(--u) * 12) calc(var(--u) * 20); border-radius: 999px; font-weight: 600; font-size: calc(var(--u) * 20); }
+  .chip svg { width: calc(var(--u) * 22); height: calc(var(--u) * 22); }
+
+  /* the trial-room panel, as the extension draws it */
+  .panel { position: relative; border-radius: calc(var(--u) * 26); background: #0d0f12; border: 1px solid #23272e; padding: calc(var(--u) * 10); padding-top: calc(var(--u) * 50); box-shadow: 0 calc(var(--u) * 30) calc(var(--u) * 70) rgba(0,0,0,.4); }
+  .panel .head { position: absolute; left: calc(var(--u) * 18); right: calc(var(--u) * 18); top: 0; height: calc(var(--u) * 50); display: flex; align-items: center; gap: calc(var(--u) * 9); color: #fff; font: 700 calc(var(--u) * 17)/1 system-ui, sans-serif; }
+  .panel .head img { width: calc(var(--u) * 24); height: calc(var(--u) * 24); border-radius: calc(var(--u) * 7); }
+  .panel .dot { width: calc(var(--u) * 8); height: calc(var(--u) * 8); border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 calc(var(--u) * 4) rgba(34,197,94,.25); }
+  .panel .status { margin-left: auto; color: #8d95a1; font-weight: 500; font-size: calc(var(--u) * 14); }
+  .panel .body { position: relative; border-radius: calc(var(--u) * 16); overflow: hidden; width: 100%; height: 100%; }
+  .panel .body img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .live { position: absolute; left: calc(var(--u) * 14); top: calc(var(--u) * 14); padding: calc(var(--u) * 7) calc(var(--u) * 13); border-radius: 999px; background: rgba(0,0,0,.62); color: #fff; font: 700 calc(var(--u) * 15)/1 system-ui, sans-serif; letter-spacing: .06em; }
+  .pill { position: absolute; display: inline-flex; align-items: center; padding: calc(var(--u) * 11) calc(var(--u) * 18) calc(var(--u) * 11) calc(var(--u) * 20); border-radius: 999px; background: #111; color: #fff; font: 600 calc(var(--u) * 20)/1 system-ui, sans-serif; box-shadow: 0 calc(var(--u) * 6) calc(var(--u) * 20) rgba(0,0,0,.35); white-space: nowrap; }
+  .card { position: relative; border-radius: calc(var(--u) * 20); overflow: hidden; background: #fff; box-shadow: 0 calc(var(--u) * 24) calc(var(--u) * 60) calc(var(--u) * -20) rgba(14,15,18,.35); }
+  .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* the frame's own ink colour is set by id, so the dark designs override it by id too */
+  #frame.D, #frame.E { color: #fff; }
+
+  /* A · hero */
+  .A { background: var(--cream); display: flex; align-items: center; gap: calc(var(--u) * 40); padding: 0 calc(var(--u) * 64); }
+  .A .copy { flex: 1; display: flex; flex-direction: column; gap: calc(var(--u) * 26); }
+  .A h1 { font-size: calc(var(--u) * 78); }
+  .A h1 span { color: var(--accent); }
+  .A p { font-size: calc(var(--u) * 25); color: #33363d; max-width: calc(var(--u) * 560); line-height: 1.35; }
+  .A .chip { background: var(--ink); color: #fff; align-self: flex-start; }
+  .A .shot { position: relative; flex: none; width: calc(var(--u) * 420); height: calc(var(--u) * 540); }
+  .A .panel { position: absolute; inset: 0; }
+  .A .gar { position: absolute; left: calc(var(--u) * -70); bottom: calc(var(--u) * 26); width: calc(var(--u) * 170); height: calc(var(--u) * 190); border: calc(var(--u) * 5) solid #fff; transform: rotate(-6deg); }
+  .A .gar .pill { left: calc(var(--u) * 10); top: calc(var(--u) * 10); font-size: calc(var(--u) * 15); padding: calc(var(--u) * 8) calc(var(--u) * 13); }
+
+  /* B · garment → you */
+  .B { background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 30); }
+  .B h1 { font-size: calc(var(--u) * 62); text-align: center; }
+  .B h1 span { color: var(--accent); }
+  .B .row { display: flex; align-items: center; gap: calc(var(--u) * 34); }
+  .B .gar { width: calc(var(--u) * 330); height: calc(var(--u) * 380); }
+  .B .gar .pill { left: calc(var(--u) * 16); top: calc(var(--u) * 16); }
+  .B .arrow { width: calc(var(--u) * 84); height: calc(var(--u) * 84); border-radius: 50%; background: var(--accent); display: grid; place-items: center; box-shadow: 0 calc(var(--u) * 14) calc(var(--u) * 34) rgba(61,91,245,.4); }
+  .B .arrow svg { width: 46%; height: 46%; }
+  .B .panel { width: calc(var(--u) * 330); height: calc(var(--u) * 380); padding-top: calc(var(--u) * 10); }
+  .B .panel .head { display: none; }
+  .B .foot { position: absolute; left: calc(var(--u) * 40); right: calc(var(--u) * 40); bottom: calc(var(--u) * 30); display: flex; justify-content: space-between; align-items: center; }
+  .B .foot .brand { font-size: calc(var(--u) * 24); } .B .foot .brand img { width: calc(var(--u) * 36); height: calc(var(--u) * 36); }
+  .B .foot .mono { font-size: calc(var(--u) * 16); color: var(--muted); }
+  .B .head1 { position: absolute; top: calc(var(--u) * 36); left: 0; right: 0; text-align: center; }
+
+  /* C · the fitting room (a frame of the launch video) */
+  .C { background: #0e0f12 center / cover no-repeat; }
+  .C .bar { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--u) * 92); background: linear-gradient(180deg, rgba(14,15,18,0), rgba(14,15,18,.92) 45%); display: flex; align-items: flex-end; justify-content: space-between; padding: 0 calc(var(--u) * 40) calc(var(--u) * 26); color: #fff; }
+  .C .brand { font-size: calc(var(--u) * 28); }
+  .C .chip { background: #fff; color: var(--ink); }
+
+  /* D · brand */
+  .D { background: radial-gradient(ellipse at 50% 38%, #5b76ff 0%, #3d5bf5 45%, #2a3fc0 100%); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: calc(var(--u) * 18); }
+  .D .mark { width: calc(var(--u) * 130); height: calc(var(--u) * 130); filter: drop-shadow(0 calc(var(--u) * 16) calc(var(--u) * 30) rgba(8,16,70,.4)); }
+  .D h1 { font-size: calc(var(--u) * 132); }
+  .D p { font-size: calc(var(--u) * 32); color: #e4e8ff; }
+  .D .chip { margin-top: calc(var(--u) * 14); background: #fff; color: var(--ink); font-size: calc(var(--u) * 22); }
+  .D .faces { position: absolute; bottom: calc(var(--u) * -40); display: flex; gap: calc(var(--u) * 14); opacity: .0; }
+
+  /* E · five outfits */
+  .E { background: #0e0f12; color: #fff; }
+  .E .top { position: absolute; left: calc(var(--u) * 50); right: calc(var(--u) * 50); top: calc(var(--u) * 40); display: flex; justify-content: space-between; align-items: center; }
+  .E h1 { font-size: calc(var(--u) * 66); }
+  .E h1 span { color: var(--soft); }
+  .E .strip { position: absolute; left: 0; right: 0; bottom: calc(var(--u) * -30); display: flex; justify-content: center; gap: calc(var(--u) * 18); }
+  .E .strip .card { width: calc(var(--u) * 200); height: calc(var(--u) * 440); background: #222; }
+  .E .strip .card:nth-child(odd) { transform: translateY(calc(var(--u) * 26)); }
+  .E .strip .card .pill { left: 50%; transform: translateX(-50%); bottom: calc(var(--u) * 60); font-size: calc(var(--u) * 15); padding: calc(var(--u) * 8) calc(var(--u) * 13); }
+  .E .strip .card.on { outline: calc(var(--u) * 5) solid #22c55e; }
+
+  /* F · the question */
+  .F { background: var(--cream); display: flex; align-items: center; padding-left: calc(var(--u) * 64); }
+  .F .copy { flex: 1; display: flex; flex-direction: column; gap: calc(var(--u) * 26); position: relative; z-index: 1; }
+  .F h1 { font-size: calc(var(--u) * 70); }
+  .F h1 .big { display: block; font-size: calc(var(--u) * 116); color: var(--accent); margin: calc(var(--u) * 6) 0; position: relative; }
+  .F h1 .big::after { content: ""; position: absolute; left: 0; bottom: calc(var(--u) * -8); width: calc(var(--u) * 560); height: calc(var(--u) * 12); border-radius: 99px; background: var(--accent); }
+  .F .brand { margin-top: calc(var(--u) * 12); }
+  .F .shot { flex: none; width: calc(var(--u) * 410); height: 118%; margin-right: calc(var(--u) * -40); transform: rotate(4deg); }
+  .F .panel { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="frame"></div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const W = Number(q.get('w') || 1200), H = Number(q.get('h') || 630), v = q.get('v') || 'A';
+  const f = document.getElementById('frame');
+  f.style.setProperty('--W', W + 'px'); f.style.setProperty('--H', H + 'px'); f.style.setProperty('--u', (H / 630) + 'px');
+  f.className = v;
+  const brand = (light) => `<div class="brand" style="color:${light ? '#fff' : 'var(--ink)'}"><img src="assets/logo-mark.svg" alt="">tryoncam</div>`;
+  const chrome = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7a5 5 0 0 1 4.33 2.5H22A10 10 0 0 0 3.6 6.6l2.87 4.97A5 5 0 0 1 12 7z" fill="#EA4335"/><path d="M7.67 14.5 2.3 5.2A10 10 0 0 0 11.1 22l2.87-4.97A5 5 0 0 1 7.67 14.5z" fill="#34A853"/><path d="M16.33 9.5H22A10 10 0 0 1 11.1 22l2.87-4.97a5 5 0 0 0 2.36-7.53z" fill="#FBBC05"/><circle cx="12" cy="12" r="3.6" fill="#4285F4" stroke="#fff" stroke-width="1.4"/></svg>';
+  const panel = (img, status = 'Live') => `<div class="panel"><div class="head"><img src="assets/logo-mark.svg" alt="">tryoncam<span class="dot"></span><span class="status">${status}</span></div><div class="body"><img src="assets/${img}.jpg" alt=""><span class="live">LIVE</span></div></div>`;
+  const designs = {
+    A: () => `<div class="copy">${brand()}<h1 class="display">See it on you <span>before you buy it.</span></h1><p>Try on clothes from any online store, live, through your own camera.</p><span class="chip">${chrome}Chrome extension · 3 free try-ons</span></div>
+             <div class="shot">${panel('p-pink')}<div class="card gar"><img src="assets/g-pink.jpg" alt=""><span class="pill">Try On</span></div></div>`,
+    B: () => `<h1 class="display head1">Click <span>Try On.</span> See it on you.</h1><div class="row" style="margin-top:calc(var(--u) * 40)">
+               <div class="card gar"><img src="assets/g-blue.jpg" alt=""><span class="pill">Try On</span></div>
+               <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+               ${panel('p-blue')}</div>
+             <div class="foot">${brand()}<span class="mono">tryoncam.com</span></div>`,
+    C: () => `<div class="bar">${brand(true)}<span class="chip">${chrome}Add to Chrome — it's free</span></div>`,
+    D: () => `<img class="mark" src="assets/logo-mark.svg" alt=""><h1 class="display">tryoncam</h1><p>See clothes on you before you buy.</p><span class="chip">${chrome}Add to Chrome · 3 free try-ons</span>`,
+    E: () => `<div class="top"><h1 class="display">Swap outfits. <span>Live.</span></h1>${brand(true)}</div>
+             <div class="strip">${['p-pink','p-coral','p-leopard','p-cocaine','p-blue'].map((p, i) => `<div class="card${i === 4 ? ' on' : ''}"><img src="assets/${p}.jpg" alt="">${i === 4 ? '<span class="pill">The one ♥</span>' : ''}</div>`).join('')}</div>`,
+    F: () => `<div class="copy"><h1 class="display">What if you could<span class="big">try anything</span>before you buy it?</h1>${brand()}</div><div class="shot">${panel('p-leopard')}</div>`,
+  };
+  f.innerHTML = designs[v]();
+  if (v === 'C') f.style.backgroundImage = 'url(assets/frame-46.8.jpg)';
+</script>
+</body>
+</html>
