@@ -213,7 +213,16 @@ async function backend(path, options = {}) {
   return data;
 }
 
+/**
+ * Settings are remembered in storage, not just in memory: Chrome stops this
+ * service worker after ~30 seconds idle, which wiped an in-memory cache, so
+ * nearly every page load in every tab went back to the server. That steady
+ * trickle of /api/settings calls was most of the backend's CPU.
+ */
+const SETTINGS_TTL_MS = 10 * 60_000;
 let settingsCache = null;
+// One request shared by every tab that asks while it is in flight.
+let settingsInFlight = null;
 
 async function rememberCredits(credits) {
   const { user } = await chrome.storage.local.get('user');
@@ -261,17 +270,31 @@ const handlers = {
    */
   async SETTINGS() {
     const now = Date.now();
-    if (settingsCache && now - settingsCache.at < 60_000) return { settings: settingsCache.value };
-    try {
-      const value = await backend('/api/settings');
-      settingsCache = { value, at: now };
-      await chrome.storage.local.set({ lastSettings: value });
-      return { settings: value };
-    } catch (error) {
-      const { lastSettings } = await chrome.storage.local.get('lastSettings');
-      if (lastSettings) return { settings: lastSettings, offline: true };
-      throw error;
+    if (!settingsCache) {
+      const { lastSettings, lastSettingsAt, lastSettingsBackend } = await chrome.storage.local.get([
+        'lastSettings', 'lastSettingsAt', 'lastSettingsBackend',
+      ]);
+      if (lastSettings && lastSettingsBackend === BACKEND) settingsCache = { value: lastSettings, at: lastSettingsAt ?? 0 };
     }
+    if (settingsCache && now - settingsCache.at < SETTINGS_TTL_MS) return { settings: settingsCache.value };
+
+    settingsInFlight ??= (async () => {
+      try {
+        // The same for everyone, so sent without the session: the server and
+        // Vercel's CDN can then answer it from cache.
+        const value = await backend('/api/settings', { headers: { Authorization: '' } });
+        settingsCache = { value, at: Date.now() };
+        await chrome.storage.local.set({ lastSettings: value, lastSettingsAt: settingsCache.at, lastSettingsBackend: BACKEND });
+        return { settings: value };
+      } catch (error) {
+        const { lastSettings } = await chrome.storage.local.get('lastSettings');
+        if (lastSettings) return { settings: lastSettings, offline: true };
+        throw error;
+      } finally {
+        settingsInFlight = null;
+      }
+    })();
+    return settingsInFlight;
   },
 
   /** Reachability only. Spend is operator information and stays in the dashboard. */
@@ -330,6 +353,7 @@ const handlers = {
     else await chrome.storage.local.remove('backendUrl');
     BACKEND = clean || DEFAULT_BACKEND;
     settingsCache = null; // copy and video may differ on another backend
+    await chrome.storage.local.remove('lastSettingsAt');
     return { effective: BACKEND };
   },
 

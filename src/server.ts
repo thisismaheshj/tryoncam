@@ -266,6 +266,12 @@ app.get('/api/state', wrap(async (_req, res) => {
 
 /** Read by the extension on every open; deliberately unauthenticated. */
 app.get('/api/settings', (_req, res) => {
+  // Identical for every caller and asked for on every page load by every
+  // installed extension, so it is served from Vercel's CDN rather than by
+  // starting this function each time. A dashboard edit reaches the extension
+  // within about five minutes. Overrides the no-store vercel.json sets on /api.
+  res.set('Cache-Control', 'public, max-age=60');
+  res.set('Vercel-CDN-Cache-Control', 'max-age=300, stale-while-revalidate=3600');
   res.json(publicSettings());
 });
 

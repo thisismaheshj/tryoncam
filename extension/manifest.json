@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzVepm0N49htvMk2Ue3hLdBrEwWc2h7deE03sjOOmG/4t8Dq3lgxNq7NhyBPLJZHgm/asY4RQEajeivy6DgbuF9cWKUutW7jooWkYEolbSivcq7CL/VUFVFm9qo/jXPhKbe8kBxd6dWnYPkfZBJGIQ5S25Nhkfp0i3We03ccmtmkhsCekWxeJz3WSRfsHZ6uaDuUJ5p11AFz5SYW+B5qVk3t9nTrDSU3keTXJQegG35Oqmd7vjJhoZtV1svXNdPDPn33+EsKxfpUNRdWYCvTi/sMqVAqMmqlbotIf2ay5Sqz2IGFfsbtlDW+JAQkZWeETTKpiRpW0VGFQDFHiVhCl+wIDAQAB",
   "name": "tryoncam: Virtual Try-On for Clothes",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "See clothes on you before you buy. Click Try On on a product photo and watch it on you, live, through your camera.",
   "icons": {
     "16": "icons/icon16.png",
